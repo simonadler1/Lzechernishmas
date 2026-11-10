@@ -14,7 +14,7 @@ Audience and tone: often a family in aveilus, and shul-goers scanning a sign on 
 
 ## Campaign
 
-Fields: title, honoree name in Hebrew (for example נפתלי בן יעקב), optional honoree name in English, dedication type (ilui nishmas, refuah shleima, zechus, other), optional message, end date, timezone.
+Fields: title, honoree name in Hebrew (for example נפתלי בן יעקב), optional honoree name in English, dedication type (ilui nishmas, refuah shleima, zechus, other), optional free-text message (up to 1000 characters, shown on the chart page and the printed sign), end date, timezone.
 
 The end date picker shows the matching Hebrew date, since these campaigns usually target a shloshim or yahrzeit.
 
@@ -99,7 +99,7 @@ Rules:
 
 ## QR sign
 
-The organizer can print a sign for any active campaign: Letter or A4, one page, with honoree name, dedication, end date, a large QR code to the public page, the short URL in text for people who cannot scan, and a line explaining this is the single shared chart for the campaign.
+The organizer can print a sign for any active campaign: Letter or A4, one page, with honoree name, dedication, end date, the organizer's free-text message when there is one, a large QR code to the public page, the short URL in text for people who cannot scan, and a line explaining this is the single shared chart for the campaign.
 
 ## Out of scope for this plan
 

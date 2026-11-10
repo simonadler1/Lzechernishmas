@@ -123,8 +123,10 @@
   .sign-sheet {
     max-width: none !important;
     width: 100% !important;
-    height: 100vh;
+    /* A hair under the page, because a sheet of exactly 100vh can round up and add a blank second page. */
+    height: calc(100vh - 0.05in);
     aspect-ratio: auto !important;
     break-inside: avoid;
+    break-after: avoid;
   }
 }

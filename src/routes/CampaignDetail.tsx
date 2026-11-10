@@ -83,7 +83,7 @@ function Details({ campaign }: { campaign: CampaignDto }) {
       </>,
     ],
     ['Timezone', campaign.timezone.replace(/_/g, ' ')],
-    ['Message', campaign.message ? <span dir="auto">{campaign.message}</span> : 'None'],
+    ['Information for participants', campaign.message ? <span dir="auto">{campaign.message}</span> : 'None'],
   ];
 
   return (

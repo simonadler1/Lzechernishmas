@@ -122,8 +122,9 @@ export function CampaignForm({ campaign, submitLabel, busy, error, onSubmit, onC
         ))}
       </SelectField>
       <TextAreaField
-        label="Message (optional)"
-        hint="A few words shown on the chart page."
+        label="Information for participants (optional)"
+        hint="Anything you want people to know, in your own words. It appears on the chart page and on the printed sign."
+        maxLength={1000}
         name="message"
         dir="auto"
         value={message}
