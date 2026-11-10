@@ -9,7 +9,7 @@ import { ContactsSection } from '../components/ContactsSection';
 import { AssignMasechtos, ClaimsTable, OpenMasechtos } from '../components/ClaimsSection';
 import { Page } from '../components/layout';
 import { ProgressBar } from '../components/ProgressBar';
-import { Button, CopyButton, Hebrew, Notice, Skeleton } from '../components/ui';
+import { Button, ButtonLink, CopyButton, Hebrew, Notice, Skeleton } from '../components/ui';
 import { ApiError, errorMessage } from '../lib/api';
 import { STATUS_LABELS, publicLink, useCampaign, useCampaignAction, useUpdateCampaign } from '../lib/campaigns';
 
@@ -41,6 +41,11 @@ function Share({ campaign }: { campaign: CampaignDto }) {
         </a>
         <CopyButton text={link} />
       </div>
+      {campaign.status !== 'archived' && (
+        <ButtonLink to={`/campaigns/${campaign.id}/sign`} variant="secondary" className="mt-3">
+          Printable sign with QR code
+        </ButtonLink>
+      )}
     </div>
   );
 }

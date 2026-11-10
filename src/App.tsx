@@ -14,8 +14,8 @@ const Outbox = lazy(() => import('./routes/Outbox'));
 const MyPortion = lazy(() => import('./routes/MyPortion'));
 const NotFound = lazy(() => import('./routes/NotFound'));
 const PublicChart = lazy(() => import('./routes/PublicChart'));
+const Sign = lazy(() => import('./routes/Sign'));
 const Unsubscribe = lazy(() => import('./routes/Unsubscribe'));
-const Placeholder = lazy(() => import('./routes/Placeholder'));
 
 const queryClient = new QueryClient({
   defaultOptions: { queries: { staleTime: 10_000, refetchOnWindowFocus: true } },
@@ -43,7 +43,7 @@ export function App() {
               <Route path="/campaigns" element={<Campaigns />} />
               <Route path="/campaigns/new" element={<CampaignNew />} />
               <Route path="/campaigns/:id" element={<CampaignDetail />} />
-              <Route path="/campaigns/:id/sign" element={<Placeholder title="Printable sign" />} />
+              <Route path="/campaigns/:id/sign" element={<Sign />} />
             </Route>
 
             <Route path="/c/:slug" element={<PublicChart />} />

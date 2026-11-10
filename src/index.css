@@ -99,10 +99,32 @@
     animation: segment-fill 700ms ease-out both;
   }
 
+  /* The printed sign: a long name drops to a smaller size so the sheet stays one page. */
+  .sign-sheet h2[data-long] {
+    font-size: 6.5cqw !important;
+  }
+
+
   /* A link sitting inside a sentence. */
   .text-link {
     color: var(--color-tekhelet);
     text-decoration: underline;
     text-underline-offset: 2px;
+  }
+}
+
+@media print {
+  html,
+  body {
+    background: white;
+  }
+
+  /* The sheet fills the printable area exactly, so it can never spill onto a second page. */
+  .sign-sheet {
+    max-width: none !important;
+    width: 100% !important;
+    height: 100vh;
+    aspect-ratio: auto !important;
+    break-inside: avoid;
   }
 }

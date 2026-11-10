@@ -149,6 +149,9 @@ export const PAGES: PageEntry[] = [
     scenario: 'empty',
     expectedErrors: [{ status: 404, path: '/api/unsubscribe/' }],
   },
+  { name: 'sign', path: '/campaigns/seed-active/sign', scenario: 'partly-taken', login: true },
+  { name: 'sign-long-names', path: '/campaigns/seed-active/sign', scenario: 'long-names', login: true },
+  { name: 'sign-draft', path: '/campaigns/seed-draft/sign', scenario: 'partly-taken', login: true },
   {
     name: 'campaign-missing',
     path: '/campaigns/no-such-campaign',
