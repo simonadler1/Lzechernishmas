@@ -3,6 +3,8 @@ import { AppError, errorBody, inMaintenance, type AppEnv } from './lib/http';
 import { authRoutes } from './routes/auth';
 import { campaignRoutes } from './routes/campaigns';
 import { devRoutes } from './routes/dev';
+import { manageRoutes } from './routes/manage';
+import { publicRoutes } from './routes/public';
 import { unsubscribeRoutes } from './routes/unsubscribe';
 
 export const app = new Hono<AppEnv>();
@@ -21,6 +23,8 @@ app.use('/api/*', async (c, next) => {
 app.route('/api/auth', authRoutes);
 app.route('/api/campaigns', campaignRoutes);
 app.route('/api/dev', devRoutes);
+app.route('/api/manage', manageRoutes);
+app.route('/api/public', publicRoutes);
 app.route('/api/unsubscribe', unsubscribeRoutes);
 
 app.notFound((c) => c.json(errorBody('not_found', 'Not found'), 404));

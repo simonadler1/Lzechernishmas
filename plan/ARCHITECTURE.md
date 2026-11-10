@@ -137,7 +137,7 @@ JSON everywhere. Errors are `{ "error": { "code": string, "message": string, ...
 | `POST /api/public/campaigns/:slug/sign-in/request-code` | none, rate limited | Send a code to a phone or email registered in this campaign |
 | `POST /api/public/campaigns/:slug/sign-in/verify` | none, rate limited | Exchange a code for a sign-in token |
 | `GET /api/manage/:token` | token | Participant's masechtos |
-| `POST /api/manage/:token/claims/:claimId/complete`, `/release` | token | |
+| `POST /api/manage/:token/claims/:claimId/complete`, `/reopen`, `/release` | token | Mark finished, undo that, give back |
 | `PATCH /api/manage/:token/participants/:participantId` | token, rate limited | Edit one submission's name, phone, email, anonymous setting |
 | `GET`, `DELETE /api/public/campaigns/:slug/mine` | device cookie | This phone's masechtos; forget this phone |
 | `GET`, `POST /api/unsubscribe/:token` | token | Show and confirm opt-out |

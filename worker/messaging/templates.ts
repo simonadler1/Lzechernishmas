@@ -60,6 +60,16 @@ export function claimConfirmation(
   data: { campaign: CampaignText; masechtos: string[]; portionUrl: string; unsubscribeUrl: string },
 ): Rendered {
   const taken = list(data.masechtos);
+  // Someone can add a phone or email while holding nothing, and still needs their link.
+  if (data.masechtos.length === 0) {
+    const text = `Here is your page for the mishnayos ${dedication(channel, data.campaign)}`;
+    return channel === 'sms'
+      ? { body: `${text}: ${data.portionUrl} ${SMS_OPT_OUT}` }
+      : {
+          subject: `Your mishnayos ${dedication(channel, data.campaign)}`,
+          body: [`${text}:\n${data.portionUrl}`, emailOptOut(data.unsubscribeUrl)].join('\n\n'),
+        };
+  }
   if (channel === 'sms') {
     return {
       body: `Thank you for taking ${taken} ${dedication(channel, data.campaign)}. Your page: ${data.portionUrl} ${SMS_OPT_OUT}`,
