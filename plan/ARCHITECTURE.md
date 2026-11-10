@@ -24,6 +24,8 @@ worker/
 src/                  React app
   routes/  components/  lib/api.ts
 e2e/                  Playwright: pages.ts registry, pages.spec.ts, flows/, snapshots
+scripts/              deploy.mjs, cf-setup.mjs, e2e-server.mjs; decisions in lib/, with tests
+docs/                 DEPLOYING.md, messaging-providers.md, real-device-check.md
 ```
 
 Routes stay thin: parse with zod, call `domain/`, return JSON. Business rules live in `domain/` so they can be tested directly.
@@ -142,6 +144,7 @@ JSON everywhere. Errors are `{ "error": { "code": string, "message": string, ...
 | `GET`, `DELETE /api/public/campaigns/:slug/mine` | device cookie | This phone's masechtos; forget this phone |
 | `GET`, `POST /api/unsubscribe/:token` | token | Show and confirm opt-out |
 | `GET /api/dev/outbox`, `POST /api/dev/run-reminders?now=`, `POST /api/dev/seed?scenario=` | non-production | Mock inspection and test data |
+| `GET /api/health` | none | `{ ok, environment, commit }`, checked after each deploy |
 
 SPA routes: `/login`, `/campaigns`, `/campaigns/new`, `/campaigns/:id`, `/campaigns/:id/sign`, `/c/:slug` (public), `/m/:token` (my portion), `/unsubscribe/:token`, `/dev/outbox`.
 
@@ -153,7 +156,7 @@ SPA routes: `/login`, `/campaigns`, `/campaigns/new`, `/campaigns/:id`, `/campai
 
 **Device memory.** A successful public claim or sign-in adds its token to a cookie named `portion`, set by the server with `Path=/api/public/campaigns/<slug>`, `HttpOnly`, `Secure`, `SameSite=Lax` and a one-year lifetime. The path keeps each campaign separate. It holds the 10 newest tokens. `/mine` verifies each token, ignores any that are invalid or from another campaign, and responds with `Cache-Control: no-store`.
 
-**Secrets.** `TOKEN_SECRET` is a Wrangler secret, with a dev value in `.dev.vars`. Session tokens and login codes are stored only as SHA-256 hashes.
+**Secrets.** `TOKEN_SECRET` is a Wrangler secret, with a dev value in `.dev.vars`. Every `/api/*` request answers 500 with code `misconfigured` while it is missing. Session tokens and login codes are stored only as SHA-256 hashes.
 
 **Environment.** `ENVIRONMENT` is `development`, `preview` or `production`. `MESSAGING_MODE` is `mock` for now. `APP_URL` is the site's absolute address, used for every link in a message, because the cron handler has no request to read an origin from. Every `/api/dev/*` route returns 404 in `production`, and `/api/dev/seed` returns 404 everywhere except `development`. `MAINTENANCE_MODE` set to `on` pauses writes and reminders, for moving between Cloudflare accounts. Account-specific values live only in `wrangler.jsonc`. `DEPLOYMENT.md` covers how each environment is set up.
 

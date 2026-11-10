@@ -9,6 +9,16 @@ import { unsubscribeRoutes } from './routes/unsubscribe';
 
 export const app = new Hono<AppEnv>();
 
+// Without the secret no link could be signed or checked, so say so on every
+// request instead of failing somewhere deep inside one.
+app.use('/api/*', async (c, next) => {
+  if (!c.env.TOKEN_SECRET) {
+    console.error('TOKEN_SECRET is not set. Add it to .dev.vars, or with `wrangler secret put TOKEN_SECRET`.');
+    throw new AppError(500, 'misconfigured', 'The site is not set up yet: TOKEN_SECRET is missing.');
+  }
+  await next();
+});
+
 app.get('/api/health', (c) => c.json({ ok: true, environment: c.env.ENVIRONMENT, commit: __COMMIT__ }));
 
 // During a move between Cloudflare accounts the chart stays readable and
