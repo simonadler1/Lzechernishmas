@@ -1,4 +1,5 @@
 import type { Page } from '@playwright/test';
+import { manageToken, signInToken } from './tokens';
 
 /**
  * Every page of the app, in each state worth looking at. pages.spec.ts runs the
@@ -148,6 +149,39 @@ export const PAGES: PageEntry[] = [
       await page.getByRole('button', { name: 'Send code' }).click();
       await page.getByLabel('6-digit code').waitFor();
     },
+  },
+  // p1 holds finished and taken masechtos; p5 holds only taken ones; p3 has finished everything.
+  { name: 'portion', path: `/m/${manageToken('seed-active-p1')}`, scenario: 'partly-taken' },
+  { name: 'portion-all-finished', path: `/m/${manageToken('seed-active-p3')}`, scenario: 'partly-taken' },
+  { name: 'portion-long-names', path: `/m/${manageToken('seed-active-p1')}`, scenario: 'long-names' },
+  {
+    name: 'portion-edit',
+    path: `/m/${manageToken('seed-active-p5')}`,
+    scenario: 'partly-taken',
+    setup: async (page) => {
+      await page.getByRole('button', { name: 'Edit my details' }).click();
+      await page.getByLabel('Your name', { exact: true }).waitFor();
+    },
+  },
+  {
+    name: 'portion-give-back-confirm',
+    path: `/m/${manageToken('seed-active-p5')}`,
+    scenario: 'partly-taken',
+    setup: async (page) => {
+      await page.getByRole('button', { name: 'Give it back' }).first().click();
+      await page.getByRole('button', { name: 'Keep it' }).waitFor();
+    },
+  },
+  {
+    name: 'portion-two-submissions',
+    path: `/m/${signInToken('seed-active', 'sms', '+17185550101')}`,
+    scenario: 'shared-phone',
+  },
+  {
+    name: 'portion-invalid',
+    path: `/m/${manageToken('seed-active-p1').slice(0, -2)}xx`,
+    scenario: 'partly-taken',
+    expectedErrors: [{ status: 404, path: '/api/manage/' }],
   },
   {
     name: 'chart-not-found',

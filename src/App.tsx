@@ -11,6 +11,7 @@ const CampaignNew = lazy(() => import('./routes/CampaignNew'));
 const CampaignDetail = lazy(() => import('./routes/CampaignDetail'));
 const Login = lazy(() => import('./routes/Login'));
 const Outbox = lazy(() => import('./routes/Outbox'));
+const MyPortion = lazy(() => import('./routes/MyPortion'));
 const NotFound = lazy(() => import('./routes/NotFound'));
 const PublicChart = lazy(() => import('./routes/PublicChart'));
 const Placeholder = lazy(() => import('./routes/Placeholder'));
@@ -45,7 +46,7 @@ export function App() {
             </Route>
 
             <Route path="/c/:slug" element={<PublicChart />} />
-            <Route path="/m/:token" element={<Placeholder title="My portion" />} />
+            <Route path="/m/:token" element={<MyPortion />} />
             <Route path="/unsubscribe/:token" element={<Placeholder title="Unsubscribe" />} />
             <Route path="/dev/outbox" element={<Outbox />} />
             <Route path="*" element={<NotFound />} />

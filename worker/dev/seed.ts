@@ -160,6 +160,18 @@ export const SCENARIOS: Record<string, Seeder> = {
     ]);
   },
 
+  /** As partly-taken, plus a second submission made with the first person's phone number. */
+  'shared-phone': async (env) => {
+    await env.DB.batch([
+      organizer(env),
+      ...campaignStatements(env, ACTIVE),
+      ...peopleStatements(env, ACTIVE.id, [
+        ...PARTLY_TAKEN,
+        { name: 'Moshe Katz, for my father', phone: '+17185550101', anonymous: true, finished: ['gittin'], taken: ['sotah'] },
+      ]),
+    ]);
+  },
+
   /** Every masechta finished. */
   completed: async (env) => {
     const names = ['Moshe Katz', 'Dovid Levi', 'Chaim Rosen', 'Eli Weiss', 'Avi Schwartz', 'Binyamin Stern', 'Yosef Friedman'];
