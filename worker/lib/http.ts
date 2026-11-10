@@ -51,3 +51,4 @@ export function clientIp(c: Context): string {
 
 export const isProduction = (env: Env) => env.ENVIRONMENT === 'production';
 export const isDevelopment = (env: Env) => env.ENVIRONMENT === 'development';
+export const inMaintenance = (env: Pick<Env, 'MAINTENANCE_MODE'>) => env.MAINTENANCE_MODE === 'on';

@@ -5,6 +5,7 @@ import {
   signManageToken,
   signSignInToken,
   signUnsubscribeToken,
+  tokenSecret,
   verifyManageToken,
   verifyPortionToken,
   verifySignInToken,
@@ -268,7 +269,7 @@ describe('routes', () => {
   });
 
   it('shows and confirms an opt-out', async () => {
-    const token = await signUnsubscribeToken(env.TOKEN_SECRET, { channel: 'email', address: 'a@b.co' });
+    const token = await signUnsubscribeToken(tokenSecret(env), { channel: 'email', address: 'a@b.co' });
     const before = await exports.default.fetch(`http://localhost/api/unsubscribe/${token}`);
     expect(await before.json()).toEqual({ channel: 'email', address: 'a@b.co', optedOut: false });
 

@@ -18,7 +18,11 @@
     "db:migrate:local": "wrangler d1 migrations apply DB --local --config wrangler.jsonc",
     "test:visual": "node scripts/visual.mjs",
     "test:visual:update": "node scripts/visual.mjs --update",
-    "test:all": "pnpm test && pnpm test:e2e && pnpm test:visual"
+    "test:all": "pnpm test && pnpm test:e2e && pnpm test:visual",
+    "deploy:preview": "node scripts/deploy.mjs preview",
+    "deploy:production": "node scripts/deploy.mjs production",
+    "deploy:check": "node scripts/deploy.mjs preview --dry-run && node scripts/deploy.mjs production --dry-run",
+    "cf:setup": "node scripts/cf-setup.mjs"
   },
   "dependencies": {
     "@fontsource/assistant": "^5.3.0",
@@ -45,6 +49,7 @@
     "eslint": "^10.14.0",
     "eslint-plugin-react-hooks": "^7.1.1",
     "globals": "^17.14.0",
+    "jsonc-parser": "^3.3.1",
     "tailwindcss": "^4.3.5",
     "typescript": "^6.0.3",
     "typescript-eslint": "^8.72.2",

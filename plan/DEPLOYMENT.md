@@ -23,7 +23,7 @@ Preview is behind Cloudflare Access because its outbox displays login codes and 
 ## Rules that are easy to get wrong
 
 - **The environment is chosen at build time.** With the Cloudflare Vite plugin, build with `CLOUDFLARE_ENV=<name>` and then run plain `wrangler deploy`. Setting the environment at deploy time does not retarget the flattened build output. Everyone deploys through the script below so this cannot go wrong.
-- **Bindings and vars are repeated per environment.** `d1_databases` and `vars` do not inherit. `triggers`, `assets`, `workers_dev`, `preview_urls` and `routes` do.
+- **Bindings, vars and secrets are repeated per environment.** `d1_databases`, `vars` and `secrets` do not inherit. `triggers`, `assets`, `workers_dev`, `preview_urls` and `routes` do.
 - **Migrations run before the build**, using `--config wrangler.jsonc --env <name>`, so Wrangler reads the source config rather than a leftover flattened one.
 - **Migrations must work with the code already running.** Add columns and tables in one release, and remove old ones in a later release. Rollback restores code only.
 - **Unmerged migrations stay off preview.** Preview is shared, so a branch's migration would break everyone else's deploys.
@@ -50,11 +50,13 @@ Preview is behind Cloudflare Access because its outbox displays login codes and 
   "env": {
     "preview": {
       "workers_dev": true,
+      "secrets": { "required": ["TOKEN_SECRET"] },
       "vars": { "ENVIRONMENT": "preview", "MESSAGING_MODE": "mock", "APP_URL": "REPLACE_PREVIEW_URL" },
       "d1_databases": [{ "binding": "DB", "database_name": "lzecher-nishmas-preview", "database_id": "REPLACE", "migrations_dir": "migrations" }]
     },
     "production": {
       "routes": [{ "pattern": "REPLACE_PRODUCTION_DOMAIN", "custom_domain": true }],
+      "secrets": { "required": ["TOKEN_SECRET"] },
       "vars": { "ENVIRONMENT": "production", "MESSAGING_MODE": "mock", "APP_URL": "https://REPLACE_PRODUCTION_DOMAIN" },
       "d1_databases": [{ "binding": "DB", "database_name": "lzecher-nishmas-production", "database_id": "REPLACE", "migrations_dir": "migrations" }]
     }

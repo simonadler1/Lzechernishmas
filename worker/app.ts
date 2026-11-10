@@ -1,12 +1,21 @@
 import { Hono } from 'hono';
-import { AppError, errorBody, type AppEnv } from './lib/http';
+import { AppError, errorBody, inMaintenance, type AppEnv } from './lib/http';
 import { authRoutes } from './routes/auth';
 import { devRoutes } from './routes/dev';
 import { unsubscribeRoutes } from './routes/unsubscribe';
 
 export const app = new Hono<AppEnv>();
 
-app.get('/api/health', (c) => c.json({ ok: true }));
+app.get('/api/health', (c) => c.json({ ok: true, environment: c.env.ENVIRONMENT, commit: __COMMIT__ }));
+
+// During a move between Cloudflare accounts the chart stays readable and
+// nothing can be written. See docs/DEPLOYING.md.
+app.use('/api/*', async (c, next) => {
+  if (inMaintenance(c.env) && c.req.method !== 'GET' && c.req.method !== 'HEAD') {
+    throw new AppError(503, 'maintenance', 'Signups are paused for a short while. Please try again soon.');
+  }
+  await next();
+});
 
 app.route('/api/auth', authRoutes);
 app.route('/api/dev', devRoutes);

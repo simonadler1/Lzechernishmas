@@ -1,7 +1,10 @@
 import { app } from './app';
+import { runScheduled } from './scheduled';
 
 export default {
   fetch: app.fetch,
-  // Runs hourly. Task 15 adds the reminder runner.
-  async scheduled() {},
+  // Runs hourly.
+  async scheduled(_controller, env) {
+    await runScheduled(env);
+  },
 } satisfies ExportedHandler<Env>;

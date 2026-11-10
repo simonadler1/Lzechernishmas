@@ -5,7 +5,7 @@ describe('GET /api/health', () => {
   it('responds ok', async () => {
     const res = await exports.default.fetch('http://localhost/api/health');
     expect(res.status).toBe(200);
-    expect(await res.json()).toEqual({ ok: true });
+    expect(await res.json()).toEqual({ ok: true, environment: 'development', commit: 'test-commit' });
   });
 
   it('returns the standard error shape for unknown API paths', async () => {
