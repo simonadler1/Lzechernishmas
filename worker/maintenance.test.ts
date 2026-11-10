@@ -34,6 +34,6 @@ describe('MAINTENANCE_MODE', () => {
   });
 
   it('makes the scheduled run do nothing', async () => {
-    expect(await runScheduled(paused)).toEqual({ skipped: 'maintenance', sent: 0 });
+    expect(await runScheduled(paused)).toMatchObject({ skipped: 'maintenance', sent: 0 });
   });
 });

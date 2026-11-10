@@ -1,6 +1,7 @@
 import { Hono } from 'hono';
 import { SCENARIOS, seed } from '../dev/seed';
 import { AppError, isDevelopment, isProduction, notFound, type AppEnv } from '../lib/http';
+import { runScheduled } from '../scheduled';
 
 export const devRoutes = new Hono<AppEnv>();
 
@@ -53,4 +54,14 @@ devRoutes.post('/seed', async (c) => {
     throw new AppError(400, 'unknown_scenario', `Unknown scenario. Use one of: ${Object.keys(SCENARIOS).join(', ')}.`);
   }
   return c.json({ ok: true, scenario });
+});
+
+// Runs the hourly job as if it were another moment, so reminders can be tried without waiting.
+devRoutes.post('/run-reminders', async (c) => {
+  const text = c.req.query('now');
+  const now = text ? new Date(text) : new Date();
+  if (Number.isNaN(now.getTime())) {
+    throw new AppError(400, 'validation', 'Give `now` as a date and time, such as 2030-01-31T15:00:00Z.');
+  }
+  return c.json({ now: now.toISOString(), ...(await runScheduled(c.env, now)) });
 });
