@@ -5,6 +5,7 @@ import { formatLongDate } from '../../shared/dates';
 import { DEDICATION_LABELS } from '../../shared/dedication';
 import { hebrewDate } from '../../shared/hebrew-date';
 import { CampaignForm } from '../components/CampaignForm';
+import { AssignMasechtos, ClaimsTable, OpenMasechtos } from '../components/ClaimsSection';
 import { Page } from '../components/layout';
 import { ProgressBar } from '../components/ProgressBar';
 import { Button, CopyButton, Hebrew, Notice, Skeleton } from '../components/ui';
@@ -91,7 +92,7 @@ function Details({ campaign }: { campaign: CampaignDto }) {
       </dl>
       {campaign.status !== 'archived' && (
         <Button variant="secondary" className="mt-4" onClick={() => setEditing(true)}>
-          Edit details
+          Edit campaign details
         </Button>
       )}
     </>
@@ -201,6 +202,23 @@ export default function CampaignDetail() {
       <Section title="Share">
         <Share campaign={campaign} />
       </Section>
+      {(campaign.status === 'active' || campaign.status === 'completed') && (
+        <>
+          <Section title="Who has what">
+            <ClaimsTable campaign={campaign} />
+          </Section>
+          {campaign.status === 'active' && (
+            <>
+              <Section title="Assign masechtos">
+                <AssignMasechtos campaign={campaign} />
+              </Section>
+              <Section title="Still open">
+                <OpenMasechtos campaign={campaign} />
+              </Section>
+            </>
+          )}
+        </>
+      )}
       <Section title="Details">
         <Details campaign={campaign} />
       </Section>

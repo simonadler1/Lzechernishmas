@@ -4,6 +4,7 @@ import { campaignCreateSchema, campaignUpdateSchema } from '../../shared/schemas
 import { generateSlug, getProgress, getProgressFor, toCampaignDto, type Campaign } from '../domain/campaigns';
 import { requireCampaignOwner, requireUser } from '../lib/auth';
 import { AppError, parseBody, type AppEnv } from '../lib/http';
+import { addOrganizerClaimRoutes } from './organizer-claims';
 
 export const campaignRoutes = new Hono<AppEnv>();
 
@@ -121,3 +122,5 @@ campaignRoutes.post('/:id/archive', async (c) => {
     .run();
   return c.json(await respond(c.env, await reload(c.env, campaign.id)));
 });
+
+addOrganizerClaimRoutes(campaignRoutes);

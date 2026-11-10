@@ -72,7 +72,7 @@ export const PAGES: PageEntry[] = [
     scenario: 'partly-taken',
     login: true,
     setup: async (page) => {
-      await page.getByRole('button', { name: 'Edit details' }).click();
+      await page.getByRole('button', { name: 'Edit campaign details' }).click();
       await page.getByLabel('Name in Hebrew').waitFor();
     },
   },
@@ -83,6 +83,39 @@ export const PAGES: PageEntry[] = [
     login: true,
     setup: async (page) => {
       await page.getByRole('button', { name: 'Archive campaign' }).click();
+      await page.getByRole('button', { name: 'Keep it' }).waitFor();
+    },
+  },
+  { name: 'campaign-completed', path: '/campaigns/seed-active', scenario: 'completed', login: true },
+  {
+    name: 'campaign-assign',
+    path: '/campaigns/seed-active',
+    scenario: 'partly-taken',
+    login: true,
+    setup: async (page) => {
+      await page.getByRole('button', { name: 'Assign masechtos' }).click();
+      await page.getByLabel('Their name').fill('Zeidy Cohen');
+      await page.getByLabel('Kilayim').check();
+      await page.getByLabel('Orlah').check();
+    },
+  },
+  {
+    name: 'campaign-claim-edit',
+    path: '/campaigns/seed-active',
+    scenario: 'partly-taken',
+    login: true,
+    setup: async (page) => {
+      await page.getByTestId('claim-demai').getByRole('button', { name: 'Edit details' }).click();
+      await page.getByLabel('Name', { exact: true }).waitFor();
+    },
+  },
+  {
+    name: 'campaign-claim-release',
+    path: '/campaigns/seed-active',
+    scenario: 'partly-taken',
+    login: true,
+    setup: async (page) => {
+      await page.getByTestId('claim-demai').getByRole('button', { name: 'Release' }).click();
       await page.getByRole('button', { name: 'Keep it' }).waitFor();
     },
   },

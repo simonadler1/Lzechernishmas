@@ -94,3 +94,20 @@ export interface ParticipantUpdatedResponse {
 export interface MineResponse {
   submissions: { manageToken: string; masechtos: { masechtaId: string; status: 'taken' | 'finished' }[] }[];
 }
+
+/** A held masechta as the organizer sees it, with the real name and contact details. */
+export interface OrganizerClaim {
+  id: string;
+  masechtaId: string;
+  status: 'taken' | 'finished';
+  claimedAt: string;
+  completedAt: string | null;
+  participant: {
+    id: string;
+    name: string;
+    phone: string | null;
+    email: string | null;
+    isAnonymous: boolean;
+    source: 'public' | 'organizer';
+  };
+}
