@@ -1,5 +1,6 @@
 import { Hono } from 'hono';
-import { isProduction, notFound, type AppEnv } from '../lib/http';
+import { SCENARIOS, seed } from '../dev/seed';
+import { AppError, isDevelopment, isProduction, notFound, type AppEnv } from '../lib/http';
 
 export const devRoutes = new Hono<AppEnv>();
 
@@ -42,4 +43,14 @@ devRoutes.get('/outbox', async (c) => {
       sentAt: m.sent_at,
     })),
   });
+});
+
+// Seeding wipes the database, so it exists only on a developer's machine.
+devRoutes.post('/seed', async (c) => {
+  if (!isDevelopment(c.env)) throw notFound();
+  const scenario = c.req.query('scenario') ?? 'empty';
+  if (!(await seed(c.env, scenario))) {
+    throw new AppError(400, 'unknown_scenario', `Unknown scenario. Use one of: ${Object.keys(SCENARIOS).join(', ')}.`);
+  }
+  return c.json({ ok: true, scenario });
 });

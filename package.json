@@ -14,8 +14,11 @@
     "typecheck": "wrangler types --config wrangler.jsonc --strict-vars=false && tsc -b",
     "lint": "eslint .",
     "test": "vitest run",
-    "test:e2e": "echo \"test:e2e is added in task 06b\"",
-    "db:migrate:local": "wrangler d1 migrations apply DB --local --config wrangler.jsonc"
+    "test:e2e": "playwright test",
+    "db:migrate:local": "wrangler d1 migrations apply DB --local --config wrangler.jsonc",
+    "test:visual": "node scripts/visual.mjs",
+    "test:visual:update": "node scripts/visual.mjs --update",
+    "test:all": "pnpm test && pnpm test:e2e && pnpm test:visual"
   },
   "dependencies": {
     "@fontsource/assistant": "^5.3.0",
