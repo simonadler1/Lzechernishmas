@@ -1,8 +1,53 @@
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { Suspense, lazy } from 'react';
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router';
+import { OrganizerLayout, Page } from './components/layout';
+import { Skeleton } from './components/ui';
+
+// Each page is its own chunk, so someone opening the public chart from a QR
+// code does not download the organizer screens or the QR library.
+const Login = lazy(() => import('./routes/Login'));
+const Outbox = lazy(() => import('./routes/Outbox'));
+const NotFound = lazy(() => import('./routes/NotFound'));
+const Placeholder = lazy(() => import('./routes/Placeholder'));
+
+const queryClient = new QueryClient({
+  defaultOptions: { queries: { staleTime: 10_000, refetchOnWindowFocus: true } },
+});
+
+function Loading() {
+  return (
+    <Page narrow>
+      <Skeleton className="h-8 w-40" />
+      <Skeleton className="mt-6 h-40 w-full" />
+    </Page>
+  );
+}
+
 export function App() {
   return (
-    <main className="mx-auto max-w-xl p-6">
-      <h1 className="text-2xl font-semibold">Mishnayos</h1>
-      <p className="mt-2">One shared chart for learning all of Shas.</p>
-    </main>
+    <QueryClientProvider client={queryClient}>
+      <BrowserRouter>
+        <Suspense fallback={<Loading />}>
+          <Routes>
+            <Route path="/" element={<Navigate to="/campaigns" replace />} />
+            <Route path="/login" element={<Login />} />
+
+            <Route element={<OrganizerLayout />}>
+              <Route path="/campaigns" element={<Placeholder title="Your campaigns" />} />
+              <Route path="/campaigns/new" element={<Placeholder title="New campaign" />} />
+              <Route path="/campaigns/:id" element={<Placeholder title="Campaign" />} />
+              <Route path="/campaigns/:id/sign" element={<Placeholder title="Printable sign" />} />
+            </Route>
+
+            <Route path="/c/:slug" element={<Placeholder title="Mishnayos chart" />} />
+            <Route path="/m/:token" element={<Placeholder title="My portion" />} />
+            <Route path="/unsubscribe/:token" element={<Placeholder title="Unsubscribe" />} />
+            <Route path="/dev/outbox" element={<Outbox />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </Suspense>
+      </BrowserRouter>
+    </QueryClientProvider>
   );
 }

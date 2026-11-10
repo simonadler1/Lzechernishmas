@@ -1,1 +1,85 @@
 @import 'tailwindcss';
+
+/* Only the weights the design uses. Fontsource files set font-display: swap. */
+@import '@fontsource/frank-ruhl-libre/500.css';
+@import '@fontsource/frank-ruhl-libre/700.css';
+@import '@fontsource/assistant/400.css';
+@import '@fontsource/assistant/600.css';
+
+/* Tokens from plan/DESIGN.md. Use them by name; do not write raw hex values in components. */
+@theme {
+  --color-wool: #f7f8f6;
+  --color-surface: #ffffff;
+  --color-ink: #14202e;
+  --color-ink-muted: #55616e;
+  --color-line: #d5dae0;
+  --color-line-strong: #8a96a3;
+  --color-tekhelet: #1d4f91;
+  --color-tekhelet-wash: #e3ecf6;
+  --color-error: #a12b2b;
+
+  --font-sans: 'Assistant', ui-sans-serif, system-ui, sans-serif;
+  --font-hebrew: 'Frank Ruhl Libre', 'Times New Roman', serif;
+
+  /* Scale: 14, 16, 20, 26, 40. */
+  --text-sm: 0.875rem;
+  --text-sm--line-height: 1.25rem;
+  --text-base: 1rem;
+  --text-base--line-height: 1.5rem;
+  --text-lg: 1.25rem;
+  --text-lg--line-height: 1.75rem;
+  --text-xl: 1.625rem;
+  --text-xl--line-height: 2rem;
+  --text-2xl: 2.5rem;
+  --text-2xl--line-height: 1.15;
+
+  --radius-control: 6px;
+}
+
+@layer base {
+  html {
+    background: var(--color-wool);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-size: 16px;
+    line-height: 1.5;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    min-height: 100dvh;
+    overflow-wrap: break-word;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-tekhelet);
+    outline-offset: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+@layer components {
+  /* The honoree's name: the largest thing on any page it appears on. */
+  .honoree-name {
+    font-family: var(--font-hebrew);
+    font-weight: 700;
+    font-size: clamp(2.5rem, 1.6rem + 4.5vw, 4.5rem);
+    line-height: 1.15;
+  }
+
+  /* A link sitting inside a sentence. */
+  .text-link {
+    color: var(--color-tekhelet);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+}

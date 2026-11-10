@@ -9,8 +9,8 @@ Status values: `todo`, `in progress`, `done`, `blocked`.
 | 03 | [Database and test harness](tasks/03-database.md) | 01 | done | `worker/test-setup.ts` migrates before and calls `reset()` after every test, so no test sees another's rows. |
 | 04 | [Mock messaging and opt-outs](tasks/04-messaging.md) | 03 | done | `dispatch` returns `sent`, `failed`, `suppressed` or `duplicate`. Routes throw `AppError` (`worker/lib/http.ts`) and `app.onError` shapes the response. The Hono app lives in `worker/app.ts`. |
 | 05 | [Organizer auth API](tasks/05-auth-api.md) | 04 | done | Code logic for organizers and participants is shared in `worker/domain/codes.ts`; only the newest code for an address counts. Cookies drop `Secure` only on a plain-http development server. Route tests use `TestClient` in `worker/test-http.ts`, which keeps cookies and uses https. |
-| 06 | [Web shell and login](tasks/06-web-shell-login.md) | 05 | in progress | |
-| 06b | [Cross-device test suite](tasks/06b-cross-device-tests.md) | 06 | todo | |
+| 06 | [Web shell and login](tasks/06-web-shell-login.md) | 05 | done | Browser run at 360px in headless Chromium: redirected to `/login`, logged in with the code from `/dev/outbox`, landed on `/campaigns`, stayed logged in after reload, logged out and was redirected; no horizontal scroll. A signed-out `/api/auth/me` logs one expected 401 in the console. Tailwind 4 keeps the theme in `src/index.css` (`@theme`), not a JS config. Every page is a lazy route. |
+| 06b | [Cross-device test suite](tasks/06b-cross-device-tests.md) | 06 | in progress | |
 | 06c | [Cloudflare deployment and runbook](tasks/06c-deployment.md) | 06b | todo | |
 | 07 | [Campaign API](tasks/07-campaign-api.md) | 02, 05 | todo | |
 | 08 | [Campaign create and list UI](tasks/08-campaign-ui.md) | 06b, 07 | todo | |
