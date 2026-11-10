@@ -1,6 +1,7 @@
 import { Hono } from 'hono';
 import { AppError, errorBody, inMaintenance, type AppEnv } from './lib/http';
 import { authRoutes } from './routes/auth';
+import { campaignRoutes } from './routes/campaigns';
 import { devRoutes } from './routes/dev';
 import { unsubscribeRoutes } from './routes/unsubscribe';
 
@@ -18,6 +19,7 @@ app.use('/api/*', async (c, next) => {
 });
 
 app.route('/api/auth', authRoutes);
+app.route('/api/campaigns', campaignRoutes);
 app.route('/api/dev', devRoutes);
 app.route('/api/unsubscribe', unsubscribeRoutes);
 
