@@ -86,3 +86,9 @@ export async function loginAs(email: string): Promise<TestClient> {
   if (res.status !== 200) throw new Error(`Login failed for ${email}: ${res.status}`);
   return client;
 }
+
+/** A token with one character of its signature changed, as a forger or a bad copy-paste would produce. */
+export function tamper(token: string): string {
+  const at = token.lastIndexOf('.') + 1;
+  return token.slice(0, at) + (token[at] === 'A' ? 'B' : 'A') + token.slice(at + 1);
+}

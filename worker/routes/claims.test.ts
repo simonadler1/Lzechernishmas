@@ -9,7 +9,7 @@ import type {
 } from '../../shared/api-types';
 import { ALL_MASECHTOS } from '../../shared/shas';
 import { signManageToken, signSignInToken, tokenSecret } from '../domain/tokens';
-import { TestClient, lastCode, lastMessage, messagesTo } from '../test-http';
+import { TestClient, lastCode, lastMessage, messagesTo, tamper } from '../test-http';
 import { createCampaign, createClaim, createParticipant, createUser, type CampaignRow } from '../test-utils';
 
 const PHONE = '+17185550123';
@@ -215,7 +215,7 @@ describe('my portion', () => {
     const campaign = await createCampaign();
     const { manageToken } = await takeOk(visitor(), campaign);
     const client = new TestClient();
-    expect((await client.get(`/api/manage/${manageToken.slice(0, -1)}x`)).status).toBe(404);
+    expect((await client.get(`/api/manage/${tamper(manageToken)}`)).status).toBe(404);
     expect((await client.get('/api/manage/nonsense')).status).toBe(404);
     const ghost = await signManageToken(tokenSecret(env), 'no-such-participant');
     expect((await client.get(`/api/manage/${ghost}`)).status).toBe(404);
@@ -569,7 +569,7 @@ describe('device memory', () => {
 
     client.setCookie(
       'portion',
-      [`${real.manageToken.slice(0, -1)}x`, elsewhere.manageToken, 'garbage', real.manageToken].join(','),
+      [tamper(real.manageToken), elsewhere.manageToken, 'garbage', real.manageToken].join(','),
       `/api/public/campaigns/${campaign.slug}`,
     );
     const body = await mine(client, campaign);

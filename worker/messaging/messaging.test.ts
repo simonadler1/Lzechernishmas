@@ -142,7 +142,8 @@ describe('tokens', () => {
     const manage = await signManageToken(secret, 'participant-1');
     const signature = manage.split('.')[1];
     expect(await verifyManageToken(secret, `participant-2.${signature}`)).toBeNull();
-    expect(await verifyManageToken(secret, manage.slice(0, -2) + (manage.endsWith('AA') ? 'BB' : 'AA'))).toBeNull();
+    const at = manage.lastIndexOf('.') + 1;
+    expect(await verifyManageToken(secret, manage.slice(0, at) + (manage[at] === 'A' ? 'B' : 'A') + manage.slice(at + 1))).toBeNull();
     expect(await verifyManageToken('secret-two', manage)).toBeNull();
     expect(await verifyManageToken(secret, 'no-dot')).toBeNull();
     expect(await verifyManageToken(secret, '')).toBeNull();
@@ -154,6 +155,22 @@ describe('tokens', () => {
     expect(await verifyUnsubscribeToken(secret, signIn)).toBeNull();
     const other = await signSignInToken(secret, { campaignId: 'c-2', channel: 'sms', address: '+17185550123' });
     expect(await verifySignInToken(secret, `${other.split('.')[0]}.${signIn.split('.')[1]}`)).toBeNull();
+  });
+});
+
+describe('token spelling', () => {
+  it('accepts only the one spelling of a signature, for every possible last character', async () => {
+    // A 32-byte signature is 43 characters, and the last one has two spare bits. Without a check,
+    // four different last characters would all be accepted.
+    const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_';
+    for (const id of ['participant-1', 'participant-2', 'participant-3']) {
+      const token = await signManageToken('secret-one', id);
+      const accepted = [];
+      for (const last of alphabet) {
+        if (await verifyManageToken('secret-one', token.slice(0, -1) + last)) accepted.push(last);
+      }
+      expect(accepted).toEqual([token.at(-1)]);
+    }
   });
 });
 

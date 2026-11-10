@@ -245,7 +245,7 @@ export const PAGES: PageEntry[] = [
   },
   {
     name: 'portion-invalid',
-    path: `/m/${manageToken('seed-active-p1').slice(0, -2)}xx`,
+    path: `/m/${manageToken('seed-active-p1').replace('.', '.x')}`,
     scenario: 'partly-taken',
     expectedErrors: [{ status: 404, path: '/api/manage/' }],
   },

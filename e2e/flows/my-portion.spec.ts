@@ -82,6 +82,6 @@ test('a name-only participant adds a phone number and changes their name', async
 
 test('a tampered link shows the invalid state', async ({ page }) => {
   await seed(page, 'partly-taken');
-  await page.goto(`/m/${manageToken('seed-active-p1').slice(0, -3)}abc`);
+  await page.goto(`/m/${manageToken('seed-active-p1').replace('.', '.x')}`);
   await expect(page.getByRole('heading', { name: 'This link does not work' })).toBeVisible();
 });

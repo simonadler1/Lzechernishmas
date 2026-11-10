@@ -61,6 +61,9 @@ async function sign(secret: string, payload: string): Promise<string> {
 async function verify(secret: string, payload: string, signature: string): Promise<boolean> {
   const bytes = fromBase64Url(signature);
   if (!bytes || bytes.length !== 32) return false;
+  // The last character of the signature carries two unused bits, so several spellings decode to
+  // the same bytes. Accept only the one spelling this code produces: one token, one valid text.
+  if (toBase64Url(bytes) !== signature) return false;
   return crypto.subtle.verify('HMAC', await hmacKey(secret), bytes, encoder.encode(payload));
 }
 
