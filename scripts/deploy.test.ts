@@ -53,7 +53,7 @@ function harness(target: 'preview' | 'production', overrides: Overrides = {}) {
     },
     gitState: () => {
       step('git');
-      return { dirty: false, branch: 'main', head: 'abc123', upstreamHead: 'abc123', ...overrides.git };
+      return { dirty: false, branch: 'master', head: 'abc123', upstreamHead: 'abc123', ...overrides.git };
     },
     runChecks: () => step('checks'),
     confirm: async () => {
@@ -104,9 +104,9 @@ describe('production deploy', () => {
 
   it.each([
     ['a dirty tree', { git: { dirty: true } }, /uncommitted/],
-    ['a branch other than main', { git: { branch: 'feature' } }, /deploys from main/],
-    ['main behind origin/main', { git: { upstreamHead: 'def456' } }, /not level with origin\/main/],
-    ['no reachable origin/main', { git: { upstreamHead: null } }, /origin\/main/],
+    ['a branch other than master', { git: { branch: 'feature' } }, /deploys from master/],
+    ['master behind origin/master', { git: { upstreamHead: 'def456' } }, /not level with origin\/master/],
+    ['no reachable origin/master', { git: { upstreamHead: null } }, /origin\/master/],
     ['the wrong typed confirmation', { typed: 'yes' }, /Not confirmed/],
   ] as const)('is refused on %s', async (_name, overrides, message) => {
     const { calls, deploy } = harness('production', overrides as Overrides);
@@ -138,7 +138,7 @@ describe('production deploy', () => {
 });
 
 describe('preview deploy', () => {
-  it('needs no main branch, confirmation or bookmark', async () => {
+  it('needs no master branch, confirmation or bookmark', async () => {
     const { calls, deploy } = harness('preview', { git: { branch: 'feature', upstreamHead: null } });
     await deploy();
     expect(calls).toEqual(['whoami', 'git', 'checks', 'migrate', 'build', 'deploy', 'fetch /api/health', 'fetch /api/dev/outbox']);

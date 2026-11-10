@@ -62,10 +62,10 @@ export function checkAccount(whoami, accountId) {
 export function checkGit(git, target) {
   if (git.dirty) refuse('The working tree has uncommitted changes. Commit or stash them, then deploy.');
   if (target !== 'production') return;
-  if (git.branch !== 'main') refuse(`Production deploys from main. You are on "${git.branch}".`);
-  if (!git.upstreamHead) refuse('Could not read origin/main. Check your connection, then try again.');
+  if (git.branch !== 'master') refuse(`Production deploys from master. You are on "${git.branch}".`);
+  if (!git.upstreamHead) refuse('Could not read origin/master. Check your connection, then try again.');
   if (git.head !== git.upstreamHead) {
-    refuse('main is not level with origin/main. Run `git pull`, or push your commits, then deploy.');
+    refuse('master is not level with origin/master. Run `git pull`, or push your commits, then deploy.');
   }
 }
 

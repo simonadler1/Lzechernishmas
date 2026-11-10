@@ -71,7 +71,7 @@ Preview is behind Cloudflare Access because its outbox displays login codes and 
 `scripts/deploy.mjs <preview|production> [--dry-run]`, exposed as `pnpm deploy:preview`, `pnpm deploy:production` and `pnpm deploy:check`. (`pnpm deploy` is a built-in pnpm command, so it is avoided.)
 
 1. Refuse a real deploy while `account_id` or this environment's values contain `REPLACE`. Confirm `wrangler whoami` has access to the configured `account_id`, and print that account's name and ID. Developers may belong to several accounts, so the deploy always targets the configured ID.
-2. Require a clean working tree. Production also requires `main`, level with `origin/main`.
+2. Require a clean working tree. Production also requires `master`, level with `origin/master`.
 3. Run typecheck, lint and unit tests. Production also runs `test:e2e`.
 4. Production only: refuse when `MESSAGING_MODE` is `mock`, then require typing `production` to confirm.
 5. Production only: record the D1 Time Travel bookmark and print it.
@@ -118,13 +118,13 @@ Prepare, with no effect on the live site:
 Cut over, outside the 10:00 reminder hour if possible:
 
 5. In the old account's dashboard, set the production Worker's variable `MAINTENANCE_MODE` to `on`. Writes return a "paused" message and reminders stop. Any reminder missed is sent after the move.
-6. With `main` checked out, still configured for the old account, export the data to `backups/`, which is git-ignored:
+6. With `master` checked out, still configured for the old account, export the data to `backups/`, which is git-ignored:
    `pnpm exec wrangler d1 export lzecher-nishmas-production --remote --output=backups/move.sql --config wrangler.jsonc --env production`
 7. Check out the branch and import:
    `pnpm exec wrangler d1 execute lzecher-nishmas-production --remote --file=backups/move.sql --config wrangler.jsonc --env production`
 8. Run `SELECT COUNT(*)` on `campaigns`, `participants` and `claims` in both accounts, and stop if any count differs.
 9. Change the nameservers at the registrar to the new account's, and wait until the domain shows **Active**.
-10. Merge the branch to `main` and run `pnpm deploy:production`. The migration step should find nothing to apply.
+10. Merge the branch to `master` and run `pnpm deploy:production`. The migration step should find nothing to apply.
 11. Open a real campaign by scanning a printed sign, then sign in and take a test masechta, and release it.
 
 Afterward:
@@ -169,7 +169,7 @@ Preview is shared, so tell the team before replacing what is there. Any branch c
 ### Deploy to production
 
 ```sh
-git switch main && git pull
+git switch master && git pull
 pnpm deploy:production
 ```
 

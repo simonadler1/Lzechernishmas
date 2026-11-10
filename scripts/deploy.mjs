@@ -18,10 +18,10 @@ const deps = {
   gitState: () => {
     let upstreamHead = null;
     try {
-      capture('git', ['fetch', '--quiet', 'origin', 'main']);
-      upstreamHead = capture('git', ['rev-parse', '--short=12', 'origin/main']);
+      capture('git', ['fetch', '--quiet', 'origin', 'master']);
+      upstreamHead = capture('git', ['rev-parse', '--short=12', 'origin/master']);
     } catch {
-      // Only production needs origin/main, and checkGit reports it.
+      // Only production needs origin/master, and checkGit reports it.
     }
     return {
       dirty: capture('git', ['status', '--porcelain']) !== '',

@@ -22,7 +22,7 @@ The Cloudflare account and production domain are not chosen yet. Until they are,
 | --- | --- |
 | `pnpm deploy:check` | Builds preview and production and runs `wrangler deploy --dry-run` for each. Touches nothing remote. |
 | `pnpm deploy:preview` | Checks, migrates, builds and deploys preview, then confirms the outbox is not public. |
-| `pnpm deploy:production` | The same for production, from an up-to-date `main`, after you type `production`. |
+| `pnpm deploy:production` | The same for production, from an up-to-date `master`, after you type `production`. |
 | `pnpm cf:setup` | Points `wrangler.jsonc` at a Cloudflare account and finds or creates its databases. |
 
 Always deploy through these commands. The environment is fixed when the app is built, and the script builds for the right one, runs migrations first, and checks the result. Running `wrangler deploy` by hand can replace the wrong Worker.
@@ -32,7 +32,7 @@ A real deploy is refused when:
 - `wrangler.jsonc` still has a `REPLACE` value for that environment,
 - your Cloudflare login has no access to the configured account,
 - the working tree has uncommitted changes,
-- (production) you are not on `main`, or `main` differs from `origin/main`,
+- (production) you are not on `master`, or `master` differs from `origin/master`,
 - (production) `MESSAGING_MODE` is `mock`,
 - typecheck, lint or tests fail.
 
@@ -77,16 +77,16 @@ Prepare, with no effect on the live site:
 Cut over, outside the 10:00 reminder hour if possible:
 
 5. In the old account's dashboard, set the production Worker's variable `MAINTENANCE_MODE` to `on`. Writes return a "paused" message and reminders stop. Any reminder missed is sent after the move.
-6. With `main` checked out, still configured for the old account, export the data to `backups/`, which is git-ignored. The export takes the database's name, not its binding:
+6. With `master` checked out, still configured for the old account, export the data to `backups/`, which is git-ignored. The export takes the database's name, not its binding:
    `mkdir -p backups && pnpm exec wrangler d1 export lzecher-nishmas-production --remote --output=backups/move.sql --config wrangler.jsonc --env production`
 7. Check out the branch and import:
    `pnpm exec wrangler d1 execute lzecher-nishmas-production --remote --file=backups/move.sql --config wrangler.jsonc --env production`
-8. Run this on both accounts, from `main` for the old one and from the branch for the new one, and stop if any count differs:
+8. Run this on both accounts, from `master` for the old one and from the branch for the new one, and stop if any count differs:
    `pnpm exec wrangler d1 execute DB --remote --config wrangler.jsonc --env production --command "SELECT (SELECT COUNT(*) FROM campaigns) AS campaigns, (SELECT COUNT(*) FROM participants) AS participants, (SELECT COUNT(*) FROM claims) AS claims"`
    Then confirm nothing is pending on the new account, because the export carries the `d1_migrations` table with it:
    `pnpm exec wrangler d1 migrations list DB --remote --config wrangler.jsonc --env production`
 9. Change the nameservers at the registrar to the new account's, and wait until the domain shows **Active**.
-10. Merge the branch to `main` and run `pnpm deploy:production`. The migration step should find nothing to apply.
+10. Merge the branch to `master` and run `pnpm deploy:production`. The migration step should find nothing to apply.
 11. Open a real campaign by scanning a printed sign, then sign in and take a test masechta, and release it.
 
 Afterward:
@@ -142,7 +142,7 @@ Preview is shared, so tell the team before replacing what is there. Any branch c
 ### Deploy to production
 
 ```sh
-git switch main && git pull
+git switch master && git pull
 pnpm deploy:production
 ```
 

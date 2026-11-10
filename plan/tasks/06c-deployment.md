@@ -24,7 +24,7 @@ This task needs no Cloudflare account. Stay local and use `--dry-run`. Creating 
 
 Tests prove the deploy logic:
 
-- Production is refused on a dirty tree, off `main`, behind `origin/main`, with `MESSAGING_MODE=mock`, and without the typed confirmation.
+- Production is refused on a dirty tree, off `master`, behind `origin/master`, with `MESSAGING_MODE=mock`, and without the typed confirmation.
 - Real deploys to either environment are refused with a `REPLACE` value remaining, and when `whoami` lacks the configured account, while dry runs still work with the placeholders.
 - `cf:setup` reuses existing databases, creates missing ones, stops without an explicit account choice, keeps comments in `wrangler.jsonc`, and produces no change on a second run.
 - **Portability:** a test scans `worker/`, `src/`, `shared/` and `scripts/` and fails on any hard-coded account ID, database ID, `workers.dev` address or production domain.
