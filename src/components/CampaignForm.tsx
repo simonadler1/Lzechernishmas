@@ -27,7 +27,6 @@ interface Props {
 
 /** Create and edit share this form. Server validation messages appear on the field they belong to. */
 export function CampaignForm({ campaign, submitLabel, busy, error, onSubmit, onCancel }: Props) {
-  const [title, setTitle] = useState(campaign?.title ?? '');
   const [honoreeName, setHonoreeName] = useState(campaign?.honoreeName ?? '');
   const [dedicationType, setDedicationType] = useState<DedicationType>(campaign?.dedicationType ?? 'ilui_nishmas');
   const [message, setMessage] = useState(campaign?.message ?? '');
@@ -65,7 +64,6 @@ export function CampaignForm({ campaign, submitLabel, busy, error, onSubmit, onC
   const submit = (event: FormEvent) => {
     event.preventDefault();
     onSubmit({
-      title,
       honoreeName,
       dedicationType,
       message,
@@ -121,15 +119,6 @@ export function CampaignForm({ campaign, submitLabel, busy, error, onSubmit, onC
           </option>
         ))}
       </SelectField>
-      <Field
-        label="Campaign title"
-        hint="For your own list, such as “Mishnayos for the shloshim”. Visitors see the name above, not this."
-        name="title"
-        required
-        value={title}
-        onChange={(e) => setTitle(e.target.value)}
-        error={errors.title}
-      />
       <div>
         <Field
           label="Target date"

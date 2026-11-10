@@ -9,7 +9,6 @@ import { createCampaign, createClaim, createParticipant } from '../test-utils';
 const today = (timezone = 'America/New_York') => localDate(new Date(), timezone);
 
 const input = (overrides: Record<string, unknown> = {}) => ({
-  title: 'Mishnayos for Zeidy',
   honoreeName: 'נפתלי בן יעקב',
   dedicationType: 'ilui_nishmas',
   message: 'Please finish by the shloshim.',
@@ -29,7 +28,6 @@ describe('campaign API', () => {
     const client = await loginAs('a@example.com');
     const campaign = await create(client);
     expect(campaign).toMatchObject({
-      title: 'Mishnayos for Zeidy',
       honoreeName: 'נפתלי בן יעקב',
       status: 'draft',
       activatedOn: null,
@@ -53,7 +51,7 @@ describe('campaign API', () => {
 
     // Editing without a timezone leaves it alone.
     const campaign = await create(client, { timezone: 'Europe/London' });
-    const patched = await client.patch(`/api/campaigns/${campaign.id}`, { title: 'Renamed' });
+    const patched = await client.patch(`/api/campaigns/${campaign.id}`, { message: 'Changed' });
     expect((await patched.json<{ campaign: CampaignDto }>()).campaign.timezone).toBe('Europe/London');
   });
 
@@ -67,11 +65,11 @@ describe('campaign API', () => {
     const list = await client.get('/api/campaigns');
     expect((await list.json<{ campaigns: CampaignDto[] }>()).campaigns.map((c) => c.id)).toEqual([campaign.id]);
 
-    const patch = await client.patch(`/api/campaigns/${campaign.id}`, { title: 'New title' });
+    const patch = await client.patch(`/api/campaigns/${campaign.id}`, { honoreeName: 'Naftali ben Yaakov' });
     expect(patch.status).toBe(200);
     expect((await patch.json<{ campaign: CampaignDto }>()).campaign).toMatchObject({
-      title: 'New title',
-      honoreeName: 'נפתלי בן יעקב',
+      honoreeName: 'Naftali ben Yaakov',
+      dedicationType: 'ilui_nishmas',
       message: 'Please finish by the shloshim.',
     });
   });
@@ -102,7 +100,7 @@ describe('campaign API', () => {
     const campaign = await create(client);
     const res = await client.post(`/api/campaigns/${campaign.id}/archive`);
     expect((await res.json<{ campaign: CampaignDto }>()).campaign.status).toBe('archived');
-    expect((await client.patch(`/api/campaigns/${campaign.id}`, { title: 'x' })).status).toBe(409);
+    expect((await client.patch(`/api/campaigns/${campaign.id}`, { message: 'x' })).status).toBe(409);
   });
 
   it('allows moving the end date after activation', async () => {
@@ -125,7 +123,6 @@ describe('campaign API', () => {
     ['a missing name', { honoreeName: '  ' }, 'honoreeName'],
     ['a name over 120 characters', { honoreeName: 'א'.repeat(121) }, 'honoreeName'],
     ['an unknown dedication', { dedicationType: 'birthday' }, 'dedicationType'],
-    ['a missing title', { title: '' }, 'title'],
   ])('rejects %s', async (_name, overrides, field) => {
     const client = await loginAs('a@example.com');
     const res = await client.post('/api/campaigns', input(overrides));
@@ -148,13 +145,13 @@ describe('campaign API', () => {
     const other = await loginAs('other@example.com');
     const base = `/api/campaigns/${campaign.id}`;
     expect((await other.get(base)).status).toBe(404);
-    expect((await other.patch(base, { title: 'Mine now' })).status).toBe(404);
+    expect((await other.patch(base, { honoreeName: 'Mine now' })).status).toBe(404);
     expect((await other.post(`${base}/activate`)).status).toBe(404);
     expect((await other.post(`${base}/archive`)).status).toBe(404);
     expect((await other.get('/api/campaigns/does-not-exist')).status).toBe(404);
     expect((await (await other.get('/api/campaigns')).json<{ campaigns: unknown[] }>()).campaigns).toEqual([]);
     expect((await (await owner.get(base)).json<{ campaign: CampaignDto }>()).campaign).toMatchObject({
-      title: 'Mishnayos for Zeidy',
+      honoreeName: 'נפתלי בן יעקב',
       status: 'draft',
     });
   });

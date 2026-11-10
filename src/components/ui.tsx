@@ -8,6 +8,8 @@ import {
   type TextareaHTMLAttributes,
 } from 'react';
 import { Link, type LinkProps } from 'react-router';
+import type { CampaignDto } from '../../shared/api-types';
+import { campaignTitleLead } from '../../shared/dedication';
 import { cx } from '../lib/cx';
 
 /**
@@ -258,6 +260,15 @@ export function HonoreeName({ name, className }: { name: string; className?: str
   return (
     <span dir="auto" lang={hasHebrew(name) ? 'he' : undefined} className={cx('font-hebrew', className)}>
       {name}
+    </span>
+  );
+}
+
+/** What a campaign is called in the organizer's pages: "L'ilui nishmas: נפתלי בן יעקב". */
+export function CampaignTitle({ campaign, className }: { campaign: Pick<CampaignDto, 'dedicationType' | 'honoreeName'>; className?: string }) {
+  return (
+    <span className={className}>
+      {campaignTitleLead(campaign.dedicationType)}: <HonoreeName name={campaign.honoreeName} className="inline-block" />
     </span>
   );
 }

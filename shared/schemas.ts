@@ -29,7 +29,6 @@ const optionalText = (max: number) =>
     .transform((value) => value || null);
 
 const campaignFields = {
-  title: z.string().trim().min(1, 'Give the campaign a title.').max(120, 'Keep the title under 120 characters.'),
   honoreeName: z.string().trim().min(1, 'Enter the name.').max(120, 'Keep the name under 120 characters.'),
   dedicationType: z.enum(DEDICATION_TYPES, 'Choose what the learning is for.'),
   message: optionalText(1000),

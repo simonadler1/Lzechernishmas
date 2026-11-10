@@ -15,8 +15,6 @@ export interface Progress {
 export interface CampaignDto {
   id: string;
   slug: string;
-  title: string;
-  /** The person the learning is for, as typed: Hebrew or English. */
   /** The person the learning is for, as typed: Hebrew or English. */
   honoreeName: string;
   dedicationType: DedicationType;

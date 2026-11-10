@@ -14,7 +14,6 @@ test('an organizer creates a campaign, activates it and copies its link', async 
   // An empty form comes back with a message on each field that needs one.
   await press(page.getByRole('button', { name: 'Create campaign' }), testInfo);
   await expect(page.getByText('Enter the name.')).toBeVisible();
-  await expect(page.getByText('Give the campaign a title.')).toBeVisible();
   await expect(page.getByText('Choose a real date.')).toBeVisible();
 
   // The name is typed with the on-screen Hebrew keyboard, as someone without one would.
@@ -35,7 +34,6 @@ test('an organizer creates a campaign, activates it and copies its link', async 
   await expect(name).toHaveValue('נפתלי צבי בן יעקב');
   await press(page.getByRole('button', { name: 'Hide the Hebrew keyboard' }), testInfo);
   await expect(keyboard).toHaveCount(0);
-  await page.getByLabel('Campaign title').fill('Mishnayos for the shloshim');
 
   // The Hebrew date follows the date as it changes.
   await page.getByLabel('Target date').fill('2031-03-15');
@@ -49,7 +47,7 @@ test('an organizer creates a campaign, activates it and copies its link', async 
   await press(page.getByRole('button', { name: 'Create campaign' }), testInfo);
   await expect(page).toHaveURL(/\/campaigns\/[0-9a-f-]{36}$/);
   await expect(page.getByText('Activate the campaign to get its link')).toBeVisible();
-  await expect(page.getByRole('heading', { level: 1 })).toHaveText('נפתלי צבי בן יעקב');
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText("L'ilui nishmas: נפתלי צבי בן יעקב");
 
   // The browser's timezone was saved with the campaign without being asked for.
   const saved = (await (await page.request.get(`/api/campaigns/${page.url().split('/').pop()}`)).json()) as {
@@ -68,7 +66,7 @@ test('an organizer creates a campaign, activates it and copies its link', async 
 
   // It is on the list now.
   await press(page.getByRole('link', { name: 'Your campaigns' }), testInfo);
-  await expect(page.getByRole('link', { name: /Mishnayos for the shloshim/ })).toBeVisible();
+  await expect(page.getByRole('link', { name: /L'ilui nishmas: / })).toBeVisible();
 });
 
 test('a name typed in English is shown as typed, everywhere', async ({ page }, testInfo) => {
@@ -76,11 +74,10 @@ test('a name typed in English is shown as typed, everywhere', async ({ page }, t
   await loginByApi(page);
   await page.goto('/campaigns/new');
   await page.getByLabel('Name', { exact: true }).fill('Sarah bas Avraham');
-  await page.getByLabel('Campaign title').fill('Refuah shleima');
   await page.getByLabel('The learning is').selectOption('refuah_shleima');
   await page.getByLabel('Target date').fill('2031-03-15');
   await press(page.getByRole('button', { name: 'Create campaign' }), testInfo);
-  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Sarah bas Avraham');
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Refuah shleima: Sarah bas Avraham');
   await press(page.getByRole('button', { name: 'Activate campaign' }), testInfo);
 
   const chart = new URL(await page.getByTestId('public-link').innerText()).pathname;

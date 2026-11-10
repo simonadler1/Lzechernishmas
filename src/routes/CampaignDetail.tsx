@@ -9,7 +9,7 @@ import { ContactsSection } from '../components/ContactsSection';
 import { AssignMasechtos, ClaimsTable, OpenMasechtos } from '../components/ClaimsSection';
 import { Page } from '../components/layout';
 import { ProgressBar } from '../components/ProgressBar';
-import { Button, ButtonLink, CopyButton, Hebrew, HonoreeName, Notice, Skeleton } from '../components/ui';
+import { Button, ButtonLink, CopyButton, CampaignTitle, Hebrew, Notice, Skeleton } from '../components/ui';
 import { ApiError, errorMessage } from '../lib/api';
 import { STATUS_LABELS, publicLink, useCampaign, useCampaignAction, useUpdateCampaign } from '../lib/campaigns';
 
@@ -73,7 +73,6 @@ function Details({ campaign }: { campaign: CampaignDto }) {
   }
 
   const rows: [string, ReactNode][] = [
-    ['Title', campaign.title],
     ['The learning is', DEDICATION_LABELS[campaign.dedicationType]],
     [
       'Target date',
@@ -190,11 +189,10 @@ export default function CampaignDetail() {
       </p>
       <div className="mt-4 flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
         <h1 className="min-w-0">
-          <HonoreeName name={campaign.honoreeName} className="block text-2xl font-bold" />
+          <CampaignTitle campaign={campaign} className="block text-2xl font-bold" />
         </h1>
         <p className="text-ink-muted">{STATUS_LABELS[campaign.status]}</p>
       </div>
-      <p className="mt-1 text-lg">{campaign.title}</p>
 
       <div className="mt-6 max-w-prose">
         <ProgressBar progress={campaign.progress} />

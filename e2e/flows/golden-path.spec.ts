@@ -39,7 +39,6 @@ test('the whole product: from a new organizer to the siyum', async ({ page, brow
 
   await press(page.getByRole('link', { name: 'Start a campaign' }), testInfo);
   await page.getByLabel('Name', { exact: true }).fill('חיה בת דוד');
-  await page.getByLabel('Campaign title').fill('Mishnayos for Bubby');
   await page.getByLabel('Target date').fill(endDate);
   await press(page.getByRole('button', { name: 'Create campaign' }), testInfo);
   await press(page.getByRole('button', { name: 'Activate campaign' }), testInfo);

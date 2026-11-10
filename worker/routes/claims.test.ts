@@ -48,7 +48,7 @@ async function signIn(client: TestClient, campaign: CampaignRow, address: string
 
 describe('public chart', () => {
   it('shows campaign fields, progress and only the masechtos that are not open', async () => {
-    const campaign = await createCampaign({ title: 'Private title', message: 'Please finish.' });
+    const campaign = await createCampaign({ message: 'Please finish.' });
     await takeOk(visitor(), campaign, { masechtaIds: ['peah', 'demai'] });
     const body = await chart(campaign);
     expect(body.campaign).toMatchObject({
@@ -63,7 +63,6 @@ describe('public chart', () => {
       { masechtaId: 'peah', status: 'taken', name: 'Moshe Katz' },
       { masechtaId: 'demai', status: 'taken', name: 'Moshe Katz' },
     ]);
-    expect(JSON.stringify(body)).not.toContain('Private title');
   });
 
   it('is 404 for draft, archived and unknown campaigns', async () => {

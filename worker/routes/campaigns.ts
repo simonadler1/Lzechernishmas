@@ -56,12 +56,12 @@ campaignRoutes.post('/', async (c) => {
   for (let attempt = 0; ; attempt++) {
     try {
       await c.env.DB.prepare(
-        `INSERT INTO campaigns (id, owner_user_id, slug, title, honoree_name, dedication_type,
+        `INSERT INTO campaigns (id, owner_user_id, slug, honoree_name, dedication_type,
            message, end_date, timezone, status, created_at, updated_at)
-         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'draft', ?, ?)`,
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'draft', ?, ?)`,
       )
         .bind(
-          id, c.get('userId'), generateSlug(), input.title, input.honoreeName,
+          id, c.get('userId'), generateSlug(), input.honoreeName,
           input.dedicationType, input.message, input.endDate, timezone, now, now,
         )
         .run();
@@ -89,11 +89,10 @@ campaignRoutes.patch('/:id', async (c) => {
   if (endDate !== campaign.end_date) requireFutureDate(endDate, timezone);
 
   await c.env.DB.prepare(
-    `UPDATE campaigns SET title = ?, honoree_name = ?, dedication_type = ?, message = ?,
+    `UPDATE campaigns SET honoree_name = ?, dedication_type = ?, message = ?,
        end_date = ?, timezone = ?, updated_at = ? WHERE id = ?`,
   )
     .bind(
-      input.title ?? campaign.title,
       input.honoreeName ?? campaign.honoree_name,
       input.dedicationType ?? campaign.dedication_type,
       input.message === undefined ? campaign.message : input.message,

@@ -9,7 +9,6 @@ export interface Campaign {
   id: string;
   owner_user_id: string;
   slug: string;
-  title: string;
   honoree_name: string;
   dedication_type: DedicationType;
   message: string | null;
@@ -76,7 +75,6 @@ export function toCampaignDto(campaign: Campaign, progress: Progress): CampaignD
   return {
     id: campaign.id,
     slug: campaign.slug,
-    title: campaign.title,
     honoreeName: campaign.honoree_name,
     dedicationType: campaign.dedication_type,
     message: campaign.message,

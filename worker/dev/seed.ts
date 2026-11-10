@@ -33,7 +33,6 @@ export const SEED_ORGANIZER = { id: 'seed-organizer', email: 'organizer@example.
 interface SeedCampaign {
   id: string;
   slug: string;
-  title: string;
   honoree: string;
   dedication?: string;
   message?: string | null;
@@ -57,11 +56,11 @@ function campaignStatements(env: Env, c: SeedCampaign): D1PreparedStatement[] {
   const status = c.status ?? 'active';
   return [
     env.DB.prepare(
-      `INSERT INTO campaigns (id, owner_user_id, slug, title, honoree_name, dedication_type,
+      `INSERT INTO campaigns (id, owner_user_id, slug, honoree_name, dedication_type,
          message, end_date, timezone, status, activated_on, completed_at, created_at, updated_at)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
     ).bind(
-      c.id, SEED_ORGANIZER.id, c.slug, c.title, c.honoree, c.dedication ?? 'ilui_nishmas',
+      c.id, SEED_ORGANIZER.id, c.slug, c.honoree, c.dedication ?? 'ilui_nishmas',
       c.message ?? null, c.endDate ?? '2030-02-14', c.timezone ?? 'America/New_York', status,
       status === 'draft' ? null : '2030-01-10', status === 'completed' ? AT : null, AT, AT,
     ),
@@ -118,7 +117,6 @@ const organizer = (env: Env) =>
 const ACTIVE: SeedCampaign = {
   id: 'seed-active',
   slug: 'chart234',
-  title: 'Mishnayos for the shloshim',
   honoree: 'נפתלי בן יעקב',
   message: 'Please try to finish by the shloshim. Tizku l’mitzvos.',
 };
@@ -126,7 +124,6 @@ const ACTIVE: SeedCampaign = {
 const DRAFT: SeedCampaign = {
   id: 'seed-draft',
   slug: 'draft234',
-  title: 'Mishnayos for the yahrzeit',
   // A name typed in English, so both scripts are covered.
   honoree: 'Sarah bas Avraham',
   endDate: '2030-06-20',
@@ -215,7 +212,6 @@ export const SCENARIOS: Record<string, Seeder> = {
       organizer(env),
       ...campaignStatements(env, {
         ...ACTIVE,
-        title: 'Mishnayos in memory of our dear father, grandfather and great-grandfather, for the first yahrzeit',
         honoree: 'הרב אברהם יהושע העשיל בן הרב שמואל יצחק מאיר הכהן זצוק״ל',
         message:
           'נא לסיים עד היארצייט. Please finish by the yahrzeit, and mark your masechta finished here so the family knows that all of Shas was learned.',

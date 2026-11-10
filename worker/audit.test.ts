@@ -53,7 +53,7 @@ describe('audit: /api/campaigns/* is closed to everyone but the owner', () => {
       const body =
         route.method === 'GET' || route.method === 'DELETE'
           ? undefined
-          : { name: 'X', isAnonymous: false, masechtaIds: ['demai'], status: 'released', title: 'X', confirmedExpectation: true, rows: [{ name: 'X', email: 'x@example.com' }] };
+          : { name: 'X', isAnonymous: false, masechtaIds: ['demai'], status: 'released', honoreeName: 'X', confirmedExpectation: true, rows: [{ name: 'X', email: 'x@example.com' }] };
       expect((await stranger.request(route.method, path, body)).status, `${route.method} ${path} as a stranger`).toBe(404);
       expect((await visitor.request(route.method, path, body)).status, `${route.method} ${path} signed out`).toBe(401);
     }
@@ -63,8 +63,8 @@ describe('audit: /api/campaigns/* is closed to everyone but the owner', () => {
     expect(after?.status).toBe('claimed');
     const contacts = await env.DB.prepare('SELECT COUNT(*) AS n FROM contacts').first<{ n: number }>();
     expect(contacts?.n).toBe(1);
-    const state = await env.DB.prepare('SELECT status, title FROM campaigns WHERE id = ?').bind(campaign.id).first();
-    expect(state).toMatchObject({ status: 'active', title: 'Mishnayos for Naftali' });
+    const state = await env.DB.prepare('SELECT status, honoree_name FROM campaigns WHERE id = ?').bind(campaign.id).first();
+    expect(state).toMatchObject({ status: 'active', honoree_name: 'נפתלי בן יעקב' });
   });
 });
 

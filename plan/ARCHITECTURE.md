@@ -53,7 +53,7 @@ CREATE TABLE sessions (
 
 CREATE TABLE campaigns (
   id TEXT PRIMARY KEY, owner_user_id TEXT NOT NULL REFERENCES users(id),
-  slug TEXT NOT NULL UNIQUE, title TEXT NOT NULL,
+  slug TEXT NOT NULL UNIQUE,  -- Migration 0003 dropped title: it is made from the dedication and the name.
   honoree_name TEXT NOT NULL,  -- Hebrew or English, as typed. Migration 0002 replaced honoree_name_he and honoree_name_en.
   dedication_type TEXT NOT NULL CHECK (dedication_type IN ('ilui_nishmas','refuah_shleima','zechus','other')),
   message TEXT, end_date TEXT NOT NULL, timezone TEXT NOT NULL,
