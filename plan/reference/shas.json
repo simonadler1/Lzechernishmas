@@ -1,0 +1,77 @@
+[
+  { "id": "zeraim", "en": "Zeraim", "he": "זרעים", "masechtos": [
+    { "id": "berachos", "en": "Berachos", "he": "ברכות", "perakim": 9, "sefaria": "Mishnah_Berakhot" },
+    { "id": "peah", "en": "Peah", "he": "פאה", "perakim": 8, "sefaria": "Mishnah_Peah" },
+    { "id": "demai", "en": "Demai", "he": "דמאי", "perakim": 7, "sefaria": "Mishnah_Demai" },
+    { "id": "kilayim", "en": "Kilayim", "he": "כלאים", "perakim": 9, "sefaria": "Mishnah_Kilayim" },
+    { "id": "sheviis", "en": "Sheviis", "he": "שביעית", "perakim": 10, "sefaria": "Mishnah_Sheviit" },
+    { "id": "terumos", "en": "Terumos", "he": "תרומות", "perakim": 11, "sefaria": "Mishnah_Terumot" },
+    { "id": "maasros", "en": "Maasros", "he": "מעשרות", "perakim": 5, "sefaria": "Mishnah_Maasrot" },
+    { "id": "maaser-sheni", "en": "Maaser Sheni", "he": "מעשר שני", "perakim": 5, "sefaria": "Mishnah_Maaser_Sheni" },
+    { "id": "challah", "en": "Challah", "he": "חלה", "perakim": 4, "sefaria": "Mishnah_Challah" },
+    { "id": "orlah", "en": "Orlah", "he": "ערלה", "perakim": 3, "sefaria": "Mishnah_Orlah" },
+    { "id": "bikkurim", "en": "Bikkurim", "he": "ביכורים", "perakim": 3, "sefaria": "Mishnah_Bikkurim" }
+  ] },
+  { "id": "moed", "en": "Moed", "he": "מועד", "masechtos": [
+    { "id": "shabbos", "en": "Shabbos", "he": "שבת", "perakim": 24, "sefaria": "Mishnah_Shabbat" },
+    { "id": "eruvin", "en": "Eruvin", "he": "עירובין", "perakim": 10, "sefaria": "Mishnah_Eruvin" },
+    { "id": "pesachim", "en": "Pesachim", "he": "פסחים", "perakim": 10, "sefaria": "Mishnah_Pesachim" },
+    { "id": "shekalim", "en": "Shekalim", "he": "שקלים", "perakim": 8, "sefaria": "Mishnah_Shekalim" },
+    { "id": "yoma", "en": "Yoma", "he": "יומא", "perakim": 8, "sefaria": "Mishnah_Yoma" },
+    { "id": "sukkah", "en": "Sukkah", "he": "סוכה", "perakim": 5, "sefaria": "Mishnah_Sukkah" },
+    { "id": "beitzah", "en": "Beitzah", "he": "ביצה", "perakim": 5, "sefaria": "Mishnah_Beitzah" },
+    { "id": "rosh-hashanah", "en": "Rosh Hashanah", "he": "ראש השנה", "perakim": 4, "sefaria": "Mishnah_Rosh_Hashanah" },
+    { "id": "taanis", "en": "Taanis", "he": "תענית", "perakim": 4, "sefaria": "Mishnah_Taanit" },
+    { "id": "megillah", "en": "Megillah", "he": "מגילה", "perakim": 4, "sefaria": "Mishnah_Megillah" },
+    { "id": "moed-katan", "en": "Moed Katan", "he": "מועד קטן", "perakim": 3, "sefaria": "Mishnah_Moed_Katan" },
+    { "id": "chagigah", "en": "Chagigah", "he": "חגיגה", "perakim": 3, "sefaria": "Mishnah_Chagigah" }
+  ] },
+  { "id": "nashim", "en": "Nashim", "he": "נשים", "masechtos": [
+    { "id": "yevamos", "en": "Yevamos", "he": "יבמות", "perakim": 16, "sefaria": "Mishnah_Yevamot" },
+    { "id": "kesubos", "en": "Kesubos", "he": "כתובות", "perakim": 13, "sefaria": "Mishnah_Ketubot" },
+    { "id": "nedarim", "en": "Nedarim", "he": "נדרים", "perakim": 11, "sefaria": "Mishnah_Nedarim" },
+    { "id": "nazir", "en": "Nazir", "he": "נזיר", "perakim": 9, "sefaria": "Mishnah_Nazir" },
+    { "id": "sotah", "en": "Sotah", "he": "סוטה", "perakim": 9, "sefaria": "Mishnah_Sotah" },
+    { "id": "gittin", "en": "Gittin", "he": "גיטין", "perakim": 9, "sefaria": "Mishnah_Gittin" },
+    { "id": "kiddushin", "en": "Kiddushin", "he": "קידושין", "perakim": 4, "sefaria": "Mishnah_Kiddushin" }
+  ] },
+  { "id": "nezikin", "en": "Nezikin", "he": "נזיקין", "masechtos": [
+    { "id": "bava-kamma", "en": "Bava Kamma", "he": "בבא קמא", "perakim": 10, "sefaria": "Mishnah_Bava_Kamma" },
+    { "id": "bava-metzia", "en": "Bava Metzia", "he": "בבא מציעא", "perakim": 10, "sefaria": "Mishnah_Bava_Metzia" },
+    { "id": "bava-basra", "en": "Bava Basra", "he": "בבא בתרא", "perakim": 10, "sefaria": "Mishnah_Bava_Batra" },
+    { "id": "sanhedrin", "en": "Sanhedrin", "he": "סנהדרין", "perakim": 11, "sefaria": "Mishnah_Sanhedrin" },
+    { "id": "makkos", "en": "Makkos", "he": "מכות", "perakim": 3, "sefaria": "Mishnah_Makkot" },
+    { "id": "shevuos", "en": "Shevuos", "he": "שבועות", "perakim": 8, "sefaria": "Mishnah_Shevuot" },
+    { "id": "eduyos", "en": "Eduyos", "he": "עדיות", "perakim": 8, "sefaria": "Mishnah_Eduyot" },
+    { "id": "avodah-zarah", "en": "Avodah Zarah", "he": "עבודה זרה", "perakim": 5, "sefaria": "Mishnah_Avodah_Zarah" },
+    { "id": "avos", "en": "Avos", "he": "אבות", "perakim": 5, "sefaria": "Pirkei_Avot" },
+    { "id": "horayos", "en": "Horayos", "he": "הוריות", "perakim": 3, "sefaria": "Mishnah_Horayot" }
+  ] },
+  { "id": "kodashim", "en": "Kodashim", "he": "קדשים", "masechtos": [
+    { "id": "zevachim", "en": "Zevachim", "he": "זבחים", "perakim": 14, "sefaria": "Mishnah_Zevachim" },
+    { "id": "menachos", "en": "Menachos", "he": "מנחות", "perakim": 13, "sefaria": "Mishnah_Menachot" },
+    { "id": "chullin", "en": "Chullin", "he": "חולין", "perakim": 12, "sefaria": "Mishnah_Chullin" },
+    { "id": "bechoros", "en": "Bechoros", "he": "בכורות", "perakim": 9, "sefaria": "Mishnah_Bekhorot" },
+    { "id": "arachin", "en": "Arachin", "he": "ערכין", "perakim": 9, "sefaria": "Mishnah_Arakhin" },
+    { "id": "temurah", "en": "Temurah", "he": "תמורה", "perakim": 7, "sefaria": "Mishnah_Temurah" },
+    { "id": "kerisos", "en": "Kerisos", "he": "כריתות", "perakim": 6, "sefaria": "Mishnah_Keritot" },
+    { "id": "meilah", "en": "Meilah", "he": "מעילה", "perakim": 6, "sefaria": "Mishnah_Meilah" },
+    { "id": "tamid", "en": "Tamid", "he": "תמיד", "perakim": 7, "sefaria": "Mishnah_Tamid" },
+    { "id": "middos", "en": "Middos", "he": "מדות", "perakim": 5, "sefaria": "Mishnah_Middot" },
+    { "id": "kinnim", "en": "Kinnim", "he": "קנים", "perakim": 3, "sefaria": "Mishnah_Kinnim" }
+  ] },
+  { "id": "taharos", "en": "Taharos", "he": "טהרות", "masechtos": [
+    { "id": "keilim", "en": "Keilim", "he": "כלים", "perakim": 30, "sefaria": "Mishnah_Kelim" },
+    { "id": "ohalos", "en": "Ohalos", "he": "אהלות", "perakim": 18, "sefaria": "Mishnah_Oholot" },
+    { "id": "negaim", "en": "Negaim", "he": "נגעים", "perakim": 14, "sefaria": "Mishnah_Negaim" },
+    { "id": "parah", "en": "Parah", "he": "פרה", "perakim": 12, "sefaria": "Mishnah_Parah" },
+    { "id": "taharos", "en": "Taharos", "he": "טהרות", "perakim": 10, "sefaria": "Mishnah_Tahorot" },
+    { "id": "mikvaos", "en": "Mikvaos", "he": "מקואות", "perakim": 10, "sefaria": "Mishnah_Mikvaot" },
+    { "id": "niddah", "en": "Niddah", "he": "נדה", "perakim": 10, "sefaria": "Mishnah_Niddah" },
+    { "id": "machshirin", "en": "Machshirin", "he": "מכשירין", "perakim": 6, "sefaria": "Mishnah_Makhshirin" },
+    { "id": "zavim", "en": "Zavim", "he": "זבים", "perakim": 5, "sefaria": "Mishnah_Zavim" },
+    { "id": "tevul-yom", "en": "Tevul Yom", "he": "טבול יום", "perakim": 4, "sefaria": "Mishnah_Tevul_Yom" },
+    { "id": "yadayim", "en": "Yadayim", "he": "ידים", "perakim": 4, "sefaria": "Mishnah_Yadayim" },
+    { "id": "uktzin", "en": "Uktzin", "he": "עוקצים", "perakim": 3, "sefaria": "Mishnah_Oktzin" }
+  ] }
+]

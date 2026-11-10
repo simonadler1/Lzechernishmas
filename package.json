@@ -1,0 +1,44 @@
+{
+  "name": "lzecher-nishmas",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "packageManager": "pnpm@10.28.2",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "types": "wrangler types --config wrangler.jsonc --strict-vars=false",
+    "typecheck": "wrangler types --config wrangler.jsonc --strict-vars=false && tsc -b",
+    "lint": "eslint .",
+    "test": "vitest run",
+    "test:e2e": "echo \"test:e2e is added in task 06b\"",
+    "db:migrate:local": "wrangler d1 migrations apply DB --local --config wrangler.jsonc"
+  },
+  "dependencies": {
+    "hono": "^4.13.17",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1"
+  },
+  "devDependencies": {
+    "@cloudflare/vite-plugin": "^1.68.0",
+    "@cloudflare/vitest-plugin": "^1.7.0",
+    "@eslint/js": "^10.0.1",
+    "@tailwindcss/vite": "^4.3.5",
+    "@types/node": "^26.6.6",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@vitejs/plugin-react": "^6.3.0",
+    "eslint": "^10.14.0",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "globals": "^17.14.0",
+    "tailwindcss": "^4.3.5",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.72.2",
+    "vite": "^8.3.7",
+    "vitest": "^5.1.0",
+    "wrangler": "^4.160.0"
+  }
+}

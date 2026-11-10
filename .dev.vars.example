@@ -1,0 +1,2 @@
+# Copy to .dev.vars and set a long random string, for example: openssl rand -base64 32
+TOKEN_SECRET=
