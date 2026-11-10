@@ -1,12 +1,4 @@
-import { Hono } from 'hono';
-
-export type AppEnv = { Bindings: Env };
-
-const app = new Hono<AppEnv>();
-
-app.get('/api/health', (c) => c.json({ ok: true }));
-
-app.notFound((c) => c.json({ error: { code: 'not_found', message: 'Not found' } }, 404));
+import { app } from './app';
 
 export default {
   fetch: app.fetch,

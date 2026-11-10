@@ -19,8 +19,10 @@
   },
   "dependencies": {
     "hono": "^4.13.17",
+    "libphonenumber-js": "^1.13.16",
     "react": "^19.3.1",
-    "react-dom": "^19.3.1"
+    "react-dom": "^19.3.1",
+    "zod": "^4.6.7"
   },
   "devDependencies": {
     "@cloudflare/vite-plugin": "^1.68.0",
