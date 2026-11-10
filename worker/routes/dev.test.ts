@@ -27,3 +27,15 @@ describe('POST /api/dev/seed', () => {
     expect((await seedAs('development', 'nope')).status).toBe(400);
   });
 });
+
+describe('seed scenarios', () => {
+  it.each(['empty', 'organizer', 'partly-taken', 'completed', 'long-names', 'past-date'])('loads %s', async (scenario) => {
+    expect((await seedAs('development', scenario)).status).toBe(200);
+  });
+
+  it('finishes all 63 masechtos in the completed scenario', async () => {
+    await seedAs('development', 'completed');
+    const row = await env.DB.prepare(`SELECT COUNT(*) AS n FROM claims WHERE status = 'completed'`).first<{ n: number }>();
+    expect(row?.n).toBe(63);
+  });
+});

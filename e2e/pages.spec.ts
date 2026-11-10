@@ -17,7 +17,7 @@ for (const entry of PAGES) {
     if (entry.before) await entry.before(page);
 
     await page.clock.setFixedTime(FROZEN_NOW);
-    const errors = watchForErrors(page);
+    const errors = watchForErrors(page, entry.expectedErrors);
     await page.goto(entry.path);
     await settle(page);
     if (entry.setup) {

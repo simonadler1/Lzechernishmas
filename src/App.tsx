@@ -6,6 +6,9 @@ import { Skeleton } from './components/ui';
 
 // Each page is its own chunk, so someone opening the public chart from a QR
 // code does not download the organizer screens or the QR library.
+const Campaigns = lazy(() => import('./routes/Campaigns'));
+const CampaignNew = lazy(() => import('./routes/CampaignNew'));
+const CampaignDetail = lazy(() => import('./routes/CampaignDetail'));
 const Login = lazy(() => import('./routes/Login'));
 const Outbox = lazy(() => import('./routes/Outbox'));
 const NotFound = lazy(() => import('./routes/NotFound'));
@@ -34,9 +37,9 @@ export function App() {
             <Route path="/login" element={<Login />} />
 
             <Route element={<OrganizerLayout />}>
-              <Route path="/campaigns" element={<Placeholder title="Your campaigns" />} />
-              <Route path="/campaigns/new" element={<Placeholder title="New campaign" />} />
-              <Route path="/campaigns/:id" element={<Placeholder title="Campaign" />} />
+              <Route path="/campaigns" element={<Campaigns />} />
+              <Route path="/campaigns/new" element={<CampaignNew />} />
+              <Route path="/campaigns/:id" element={<CampaignDetail />} />
               <Route path="/campaigns/:id/sign" element={<Placeholder title="Printable sign" />} />
             </Route>
 

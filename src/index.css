@@ -76,6 +76,15 @@
     line-height: 1.15;
   }
 
+  /* Taken, not yet finished: diagonal stripes, after the stripes of a tallis. */
+  .state-taken {
+    background-image: repeating-linear-gradient(
+      135deg,
+      var(--color-tekhelet) 0 2px,
+      var(--color-surface) 2px 6px
+    );
+  }
+
   /* A link sitting inside a sentence. */
   .text-link {
     color: var(--color-tekhelet);

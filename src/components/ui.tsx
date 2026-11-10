@@ -1,4 +1,12 @@
-import { useId, type ButtonHTMLAttributes, type InputHTMLAttributes, type ReactNode } from 'react';
+import {
+  useId,
+  useState,
+  type ButtonHTMLAttributes,
+  type InputHTMLAttributes,
+  type ReactNode,
+  type SelectHTMLAttributes,
+  type TextareaHTMLAttributes,
+} from 'react';
 import { Link, type LinkProps } from 'react-router';
 import { cx } from '../lib/cx';
 
@@ -85,6 +93,118 @@ export function Field({ label, hint, error, id, ...rest }: FieldProps) {
       />
       <FieldError id={errorId}>{error}</FieldError>
     </div>
+  );
+}
+
+interface LabelledProps {
+  label: string;
+  hint?: ReactNode;
+  error?: string;
+}
+
+/** Label, hint and error around any control. `children` receives the ids to wire up. */
+function Labelled({
+  label,
+  hint,
+  error,
+  id,
+  children,
+}: LabelledProps & { id?: string; children: (props: { id: string; 'aria-invalid'?: true; 'aria-describedby'?: string }) => ReactNode }) {
+  const generated = useId();
+  const controlId = id ?? generated;
+  const hintId = hint ? `${controlId}-hint` : undefined;
+  const errorId = error ? `${controlId}-error` : undefined;
+  return (
+    <div>
+      <label htmlFor={controlId} className="mb-1 block font-semibold">
+        {label}
+      </label>
+      {hint && (
+        <p id={hintId} className="mb-1 text-sm text-ink-muted">
+          {hint}
+        </p>
+      )}
+      {children({
+        id: controlId,
+        'aria-invalid': error ? true : undefined,
+        'aria-describedby': cx(hintId, errorId) || undefined,
+      })}
+      <FieldError id={errorId}>{error}</FieldError>
+    </div>
+  );
+}
+
+export function SelectField({
+  label,
+  hint,
+  error,
+  id,
+  className,
+  children,
+  ...rest
+}: LabelledProps & SelectHTMLAttributes<HTMLSelectElement>) {
+  return (
+    <Labelled label={label} hint={hint} error={error} id={id}>
+      {(props) => (
+        <select className={cx(inputClass, className)} {...props} {...rest}>
+          {children}
+        </select>
+      )}
+    </Labelled>
+  );
+}
+
+export function TextAreaField({
+  label,
+  hint,
+  error,
+  id,
+  className,
+  ...rest
+}: LabelledProps & TextareaHTMLAttributes<HTMLTextAreaElement>) {
+  return (
+    <Labelled label={label} hint={hint} error={error} id={id}>
+      {(props) => <textarea className={cx(inputClass, 'min-h-28', className)} {...props} {...rest} />}
+    </Labelled>
+  );
+}
+
+/** A checkbox whose whole row is the tap target. */
+export function Checkbox({
+  label,
+  hint,
+  className,
+  ...rest
+}: { label: ReactNode; hint?: ReactNode } & Omit<InputHTMLAttributes<HTMLInputElement>, 'type'>) {
+  return (
+    <label className={cx('flex min-h-11 cursor-pointer items-start gap-3 py-2', className)}>
+      <input type="checkbox" className="mt-0.5 size-5 shrink-0 accent-tekhelet" {...rest} />
+      <span>
+        <span className="block">{label}</span>
+        {hint && <span className="block text-sm text-ink-muted">{hint}</span>}
+      </span>
+    </label>
+  );
+}
+
+/** Copies text and says so. Falls back to showing the text selected when the clipboard is unavailable. */
+export function CopyButton({ text, label = 'Copy link', className }: { text: string; label?: string; className?: string }) {
+  const [state, setState] = useState<'idle' | 'copied' | 'failed'>('idle');
+  const copy = async () => {
+    try {
+      await navigator.clipboard.writeText(text);
+      setState('copied');
+    } catch {
+      setState('failed');
+    }
+    setTimeout(() => setState('idle'), 2500);
+  };
+  return (
+    <Button variant="secondary" className={className} onClick={copy}>
+      <span aria-live="polite">
+        {state === 'copied' ? 'Copied' : state === 'failed' ? 'Could not copy. Select the link instead.' : label}
+      </span>
+    </Button>
   );
 }
 

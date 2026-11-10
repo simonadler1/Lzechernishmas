@@ -90,9 +90,10 @@ export async function expectAccessible(page: Page) {
  * Records console errors and failed requests from the moment it is called.
  * A signed-out visitor's check of /api/auth/me answers 401 by design.
  */
-export function watchForErrors(page: Page) {
+export function watchForErrors(page: Page, allowed: { status: number; path: string }[] = []) {
   const problems: string[] = [];
-  const expected = (url: string, status?: number) => url.endsWith('/api/auth/me') && status === 401;
+  const expected = (url: string, status?: number) =>
+    (url.endsWith('/api/auth/me') && status === 401) || allowed.some((a) => a.status === status && url.includes(a.path));
   let expected401 = 0;
   page.on('response', (res) => {
     if (res.status() < 400) return;
