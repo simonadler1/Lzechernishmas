@@ -247,6 +247,21 @@ export function PageHeading({ children, className }: { children: ReactNode; clas
   return <h1 className={cx('text-xl font-semibold', className)}>{children}</h1>;
 }
 
+const HEBREW_LETTERS = /[\u0590-\u05FF]/;
+export const hasHebrew = (text: string) => HEBREW_LETTERS.test(text);
+
+/**
+ * The name of the person the learning is for. It may be in Hebrew or English,
+ * so the direction follows the text, and both are set in the same serif.
+ */
+export function HonoreeName({ name, className }: { name: string; className?: string }) {
+  return (
+    <span dir="auto" lang={hasHebrew(name) ? 'he' : undefined} className={cx('font-hebrew', className)}>
+      {name}
+    </span>
+  );
+}
+
 /** Hebrew text inside an English page. The page stays LTR; only this element flips. */
 export function Hebrew({ children, className }: { children: ReactNode; className?: string }) {
   return (

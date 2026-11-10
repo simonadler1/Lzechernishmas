@@ -60,7 +60,18 @@ export const PAGES: PageEntry[] = [
     setup: async (page) => {
       await page.getByLabel('Target date').fill('2031-03-15');
       await page.getByRole('button', { name: 'Create campaign' }).click();
-      await page.getByText('Enter the name in Hebrew.').waitFor();
+      await page.getByText('Enter the name.').waitFor();
+    },
+  },
+  {
+    name: 'campaign-new-hebrew-keyboard',
+    path: '/campaigns/new',
+    scenario: 'organizer',
+    login: true,
+    setup: async (page) => {
+      await page.getByRole('button', { name: 'Type in Hebrew letters' }).click();
+      const keyboard = page.getByRole('group', { name: 'Hebrew keyboard' });
+      for (const letter of ['ש', 'ר', 'ה']) await keyboard.getByRole('button', { name: letter, exact: true }).click();
     },
   },
   { name: 'campaign-draft', path: '/campaigns/seed-draft', scenario: 'partly-taken', login: true },
@@ -73,7 +84,7 @@ export const PAGES: PageEntry[] = [
     login: true,
     setup: async (page) => {
       await page.getByRole('button', { name: 'Edit campaign details' }).click();
-      await page.getByLabel('Name in Hebrew').waitFor();
+      await page.getByLabel('Name', { exact: true }).waitFor();
     },
   },
   {
@@ -151,6 +162,7 @@ export const PAGES: PageEntry[] = [
   },
   { name: 'sign', path: '/campaigns/seed-active/sign', scenario: 'partly-taken', login: true },
   { name: 'sign-long-names', path: '/campaigns/seed-active/sign', scenario: 'long-names', login: true },
+  { name: 'sign-english-name', path: '/campaigns/seed-active/sign', scenario: 'english-name', login: true },
   { name: 'sign-draft', path: '/campaigns/seed-draft/sign', scenario: 'partly-taken', login: true },
   {
     name: 'campaign-missing',
@@ -164,6 +176,7 @@ export const PAGES: PageEntry[] = [
   { name: 'chart-completed', path: CHART, scenario: 'completed' },
   { name: 'chart-long-names', path: CHART, scenario: 'long-names' },
   { name: 'chart-past-date', path: CHART, scenario: 'past-date' },
+  { name: 'chart-english-name', path: CHART, scenario: 'english-name' },
   { name: 'chart-yours', path: CHART, scenario: 'partly-taken', before: takeAsVisitor },
   {
     name: 'chart-only-open',

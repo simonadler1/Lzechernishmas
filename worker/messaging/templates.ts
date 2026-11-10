@@ -4,8 +4,9 @@ import type { Channel } from './types';
 /**
  * One pure function per event. Each returns the text for the channel it is given.
  *
- * SMS uses the English honoree name when there is one, because a single Hebrew
- * character switches the whole message to short 70-character segments.
+ * The name is used as the organizer typed it. A name in Hebrew letters makes a
+ * text message cost more, because one Hebrew character switches the whole
+ * message to short 70-character segments.
  */
 
 export interface Rendered {
@@ -14,21 +15,15 @@ export interface Rendered {
 }
 
 export interface CampaignText {
-  honoreeNameHe: string;
-  honoreeNameEn: string | null;
+  honoreeName: string;
   dedicationType: DedicationType;
 }
 
 const SMS_OPT_OUT = 'Reply STOP to opt out';
 const emailOptOut = (url: string) => `To stop emails about this, open: ${url}`;
 
-function honoree(channel: Channel, campaign: CampaignText): string {
-  if (channel === 'sms') return campaign.honoreeNameEn || campaign.honoreeNameHe;
-  return campaign.honoreeNameEn ? `${campaign.honoreeNameHe} (${campaign.honoreeNameEn})` : campaign.honoreeNameHe;
-}
-
-const dedication = (channel: Channel, campaign: CampaignText) =>
-  dedicationPhrase(campaign.dedicationType, honoree(channel, campaign));
+const dedication = (_channel: Channel, campaign: CampaignText) =>
+  dedicationPhrase(campaign.dedicationType, campaign.honoreeName);
 
 function list(items: string[]): string {
   if (items.length <= 1) return items.join('');

@@ -12,8 +12,7 @@ import { tokenSecret, verifyPortionToken, type PortionRef } from './tokens';
 export function toPublicCampaign(campaign: Campaign): PublicCampaignDto {
   return {
     slug: campaign.slug,
-    honoreeNameHe: campaign.honoree_name_he,
-    honoreeNameEn: campaign.honoree_name_en,
+    honoreeName: campaign.honoree_name,
     dedicationType: campaign.dedication_type,
     message: campaign.message,
     endDate: campaign.end_date,

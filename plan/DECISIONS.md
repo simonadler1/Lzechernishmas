@@ -29,4 +29,6 @@ Choices made during planning, with the reason and the cost of reversing each. Ro
 | **Confirmed:** Cloudflare project name is `lzecher-nishmas` | Owner's decision. | Low before the first deploy. |
 | **Confirmed:** account and domain are undecided, and the project must be deployable to any Cloudflare account | Owner's decision. Account values sit only in `wrangler.jsonc`, `pnpm cf:setup` re-creates the resources, and `DEPLOYMENT.md` has a tested data move. | Low. |
 | Buy the domain outside Cloudflare Registrar | A nameserver change is enough to move accounts, while a Registrar domain needs a manual transfer request. | Medium once bought. |
+| **Confirmed:** one name field, in Hebrew or English, with an on-screen Hebrew keyboard | Owner's decision, to simplify the form; most users have no Hebrew keyboard. Text messages use the name as typed, so a Hebrew name makes them cost more segments. | Low. |
+| **Confirmed:** no timezone input | Owner's decision. A new campaign silently takes the organizer's browser timezone, falling back to New York. A campaign created from outside Israel for people in Israel would follow the diaspora Yom Tov calendar and US phone format. | Low: add the field back. |
 | Ashkenazi transliteration in English names | Matches how the product was described ("mishnayos", "Shabbos"). | Low: data file. |

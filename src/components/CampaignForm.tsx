@@ -1,20 +1,19 @@
-import { useMemo, useState, type FormEvent } from 'react';
+import { useRef, useState, type FormEvent, type SyntheticEvent } from 'react';
 import type { CampaignDto } from '../../shared/api-types';
 import { DEDICATION_LABELS, DEDICATION_TYPES, type DedicationType } from '../../shared/dedication';
 import { hebrewDate } from '../../shared/hebrew-date';
 import type { CampaignInput } from '../../shared/schemas';
 import { errorMessage, fieldErrors } from '../lib/api';
+import { HebrewKeyboard } from './HebrewKeyboard';
 import { Button, Field, Hebrew, Notice, SelectField, TextAreaField } from './ui';
 
-function timezones(current: string): string[] {
-  let all: string[];
+/** The browser's timezone. It is saved with a new campaign so reminders go out in the organizer's morning. */
+function browserTimezone(): string | undefined {
   try {
-    all = Intl.supportedValuesOf('timeZone');
+    return Intl.DateTimeFormat().resolvedOptions().timeZone || undefined;
   } catch {
-    // Older browsers: offer the common ones.
-    all = ['America/New_York', 'America/Chicago', 'America/Los_Angeles', 'Europe/London', 'Asia/Jerusalem'];
+    return undefined;
   }
-  return all.includes(current) ? all : [current, ...all];
 }
 
 interface Props {
@@ -29,47 +28,86 @@ interface Props {
 /** Create and edit share this form. Server validation messages appear on the field they belong to. */
 export function CampaignForm({ campaign, submitLabel, busy, error, onSubmit, onCancel }: Props) {
   const [title, setTitle] = useState(campaign?.title ?? '');
-  const [honoreeNameHe, setHonoreeNameHe] = useState(campaign?.honoreeNameHe ?? '');
-  const [honoreeNameEn, setHonoreeNameEn] = useState(campaign?.honoreeNameEn ?? '');
+  const [honoreeName, setHonoreeName] = useState(campaign?.honoreeName ?? '');
   const [dedicationType, setDedicationType] = useState<DedicationType>(campaign?.dedicationType ?? 'ilui_nishmas');
   const [message, setMessage] = useState(campaign?.message ?? '');
   const [endDate, setEndDate] = useState(campaign?.endDate ?? '');
-  const [timezone, setTimezone] = useState(
-    campaign?.timezone ?? Intl.DateTimeFormat().resolvedOptions().timeZone ?? 'America/New_York',
-  );
+  const [keyboardOpen, setKeyboardOpen] = useState(false);
 
-  const zones = useMemo(() => timezones(timezone), [timezone]);
+  // Where the on-screen keyboard types: the last place the cursor was in the name field.
+  const caret = useRef<{ start: number; end: number } | null>(null);
+  const rememberCaret = (event: SyntheticEvent<HTMLInputElement>) => {
+    const { selectionStart, selectionEnd } = event.currentTarget;
+    caret.current = selectionStart === null ? null : { start: selectionStart, end: selectionEnd ?? selectionStart };
+  };
+  const typeAt = (edit: (start: number, end: number, value: string) => { value: string; caret: number }) => {
+    setHonoreeName((current) => {
+      const at = caret.current ?? { start: current.length, end: current.length };
+      const start = Math.min(at.start, current.length);
+      const next = edit(start, Math.min(at.end, current.length), current);
+      caret.current = { start: next.caret, end: next.caret };
+      return next.value;
+    });
+  };
+  const insert = (text: string) =>
+    typeAt((start, end, value) => ({ value: value.slice(0, start) + text + value.slice(end), caret: start + text.length }));
+  const deleteBack = () =>
+    typeAt((start, end, value) =>
+      start !== end
+        ? { value: value.slice(0, start) + value.slice(end), caret: start }
+        : { value: value.slice(0, Math.max(0, start - 1)) + value.slice(start), caret: Math.max(0, start - 1) },
+    );
+
   const errors = fieldErrors(error);
   const hebrew = hebrewDate(endDate);
   const hasFieldError = Object.keys(errors).length > 0;
 
   const submit = (event: FormEvent) => {
     event.preventDefault();
-    onSubmit({ title, honoreeNameHe, honoreeNameEn, dedicationType, message, endDate, timezone });
+    onSubmit({
+      title,
+      honoreeName,
+      dedicationType,
+      message,
+      endDate,
+      // Only a new campaign gets a timezone. Editing leaves it as it was.
+      ...(campaign ? {} : { timezone: browserTimezone() }),
+    });
   };
 
   return (
     <form onSubmit={submit} className="space-y-5" noValidate>
-      <Field
-        label="Name in Hebrew"
-        hint="The person the learning is for, as it should appear on the chart and the sign. For example: נפתלי בן יעקב"
-        name="honoreeNameHe"
-        dir="rtl"
-        lang="he"
-        className="font-hebrew text-lg"
-        required
-        value={honoreeNameHe}
-        onChange={(e) => setHonoreeNameHe(e.target.value)}
-        error={errors.honoreeNameHe}
-      />
-      <Field
-        label="Name in English (optional)"
-        hint="Used in text messages, which are much shorter when written in Hebrew letters."
-        name="honoreeNameEn"
-        value={honoreeNameEn}
-        onChange={(e) => setHonoreeNameEn(e.target.value)}
-        error={errors.honoreeNameEn}
-      />
+      <div>
+        <Field
+          label="Name"
+          hint="The person the learning is for, in Hebrew or English, as it should appear on the chart and the sign."
+          name="honoreeName"
+          dir="auto"
+          autoComplete="off"
+          className="font-hebrew text-lg"
+          required
+          value={honoreeName}
+          onChange={(e) => {
+            setHonoreeName(e.target.value);
+            rememberCaret(e);
+          }}
+          onSelect={rememberCaret}
+          onBlur={rememberCaret}
+          error={errors.honoreeName}
+        />
+        <Button
+          variant="quiet"
+          className="-ml-4"
+          aria-expanded={keyboardOpen}
+          aria-controls="hebrew-keyboard"
+          onClick={() => setKeyboardOpen((open) => !open)}
+        >
+          {keyboardOpen ? 'Hide the Hebrew keyboard' : 'Type in Hebrew letters'}
+        </Button>
+        <div id="hebrew-keyboard" hidden={!keyboardOpen}>
+          {keyboardOpen && <HebrewKeyboard onInsert={insert} onDelete={deleteBack} className="mt-1 max-w-md" />}
+        </div>
+      </div>
       <SelectField
         label="The learning is"
         name="dedicationType"
@@ -107,20 +145,6 @@ export function CampaignForm({ campaign, submitLabel, busy, error, onSubmit, onC
           {hebrew && <Hebrew>{hebrew}</Hebrew>}
         </p>
       </div>
-      <SelectField
-        label="Timezone"
-        hint="Reminders go out at about 10:00 in the morning in this timezone."
-        name="timezone"
-        value={timezone}
-        onChange={(e) => setTimezone(e.target.value)}
-        error={errors.timezone}
-      >
-        {zones.map((zone) => (
-          <option key={zone} value={zone}>
-            {zone.replace(/_/g, ' ')}
-          </option>
-        ))}
-      </SelectField>
       <TextAreaField
         label="Information for participants (optional)"
         hint="Anything you want people to know, in your own words. It appears on the chart page and on the printed sign."

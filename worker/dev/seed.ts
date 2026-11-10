@@ -34,8 +34,7 @@ interface SeedCampaign {
   id: string;
   slug: string;
   title: string;
-  honoreeHe: string;
-  honoreeEn?: string | null;
+  honoree: string;
   dedication?: string;
   message?: string | null;
   endDate?: string;
@@ -58,11 +57,11 @@ function campaignStatements(env: Env, c: SeedCampaign): D1PreparedStatement[] {
   const status = c.status ?? 'active';
   return [
     env.DB.prepare(
-      `INSERT INTO campaigns (id, owner_user_id, slug, title, honoree_name_he, honoree_name_en, dedication_type,
+      `INSERT INTO campaigns (id, owner_user_id, slug, title, honoree_name, dedication_type,
          message, end_date, timezone, status, activated_on, completed_at, created_at, updated_at)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
     ).bind(
-      c.id, SEED_ORGANIZER.id, c.slug, c.title, c.honoreeHe, c.honoreeEn ?? null, c.dedication ?? 'ilui_nishmas',
+      c.id, SEED_ORGANIZER.id, c.slug, c.title, c.honoree, c.dedication ?? 'ilui_nishmas',
       c.message ?? null, c.endDate ?? '2030-02-14', c.timezone ?? 'America/New_York', status,
       status === 'draft' ? null : '2030-01-10', status === 'completed' ? AT : null, AT, AT,
     ),
@@ -120,8 +119,7 @@ const ACTIVE: SeedCampaign = {
   id: 'seed-active',
   slug: 'chart234',
   title: 'Mishnayos for the shloshim',
-  honoreeHe: 'נפתלי בן יעקב',
-  honoreeEn: 'Naftali ben Yaakov',
+  honoree: 'נפתלי בן יעקב',
   message: 'Please try to finish by the shloshim. Tizku l’mitzvos.',
 };
 
@@ -129,8 +127,8 @@ const DRAFT: SeedCampaign = {
   id: 'seed-draft',
   slug: 'draft234',
   title: 'Mishnayos for the yahrzeit',
-  honoreeHe: 'שרה בת אברהם',
-  honoreeEn: null,
+  // A name typed in English, so both scripts are covered.
+  honoree: 'Sarah bas Avraham',
   endDate: '2030-06-20',
   status: 'draft',
 };
@@ -188,6 +186,15 @@ export const SCENARIOS: Record<string, Seeder> = {
     ]);
   },
 
+  /** An active campaign whose name was typed in English. */
+  'english-name': async (env) => {
+    await env.DB.batch([
+      organizer(env),
+      ...campaignStatements(env, { ...ACTIVE, honoree: 'Sarah bas Avraham', dedication: 'refuah_shleima', message: null }),
+      ...peopleStatements(env, ACTIVE.id, PARTLY_TAKEN),
+    ]);
+  },
+
   /** Every masechta finished. */
   completed: async (env) => {
     const names = ['Moshe Katz', 'Dovid Levi', 'Chaim Rosen', 'Eli Weiss', 'Avi Schwartz', 'Binyamin Stern', 'Yosef Friedman'];
@@ -209,8 +216,7 @@ export const SCENARIOS: Record<string, Seeder> = {
       ...campaignStatements(env, {
         ...ACTIVE,
         title: 'Mishnayos in memory of our dear father, grandfather and great-grandfather, for the first yahrzeit',
-        honoreeHe: 'הרב אברהם יהושע העשיל בן הרב שמואל יצחק מאיר הכהן זצוק״ל',
-        honoreeEn: 'Harav Avraham Yehoshua Heschel ben Harav Shmuel Yitzchok Meir Hakohen',
+        honoree: 'הרב אברהם יהושע העשיל בן הרב שמואל יצחק מאיר הכהן זצוק״ל',
         message:
           'נא לסיים עד היארצייט. Please finish by the yahrzeit, and mark your masechta finished here so the family knows that all of Shas was learned.',
       }),

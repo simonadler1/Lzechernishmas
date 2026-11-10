@@ -30,17 +30,12 @@ const optionalText = (max: number) =>
 
 const campaignFields = {
   title: z.string().trim().min(1, 'Give the campaign a title.').max(120, 'Keep the title under 120 characters.'),
-  honoreeNameHe: z
-    .string()
-    .trim()
-    .min(1, 'Enter the name in Hebrew.')
-    .max(120, 'Keep the name under 120 characters.')
-    .refine((value) => /[֐-׿]/.test(value), 'Enter the name in Hebrew letters.'),
-  honoreeNameEn: optionalText(120),
+  honoreeName: z.string().trim().min(1, 'Enter the name.').max(120, 'Keep the name under 120 characters.'),
   dedicationType: z.enum(DEDICATION_TYPES, 'Choose what the learning is for.'),
   message: optionalText(1000),
   endDate: z.string().refine(isRealDate, 'Choose a real date.'),
-  timezone: z.string().refine(isValidTimezone, 'Choose a valid timezone.'),
+  // Not asked for in the form. The page sends the browser's timezone when a campaign is created.
+  timezone: z.string().refine(isValidTimezone, 'Choose a valid timezone.').optional(),
 };
 
 export const campaignCreateSchema = z.object(campaignFields);

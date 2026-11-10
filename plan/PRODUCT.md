@@ -14,7 +14,7 @@ Audience and tone: often a family in aveilus, and shul-goers scanning a sign on 
 
 ## Campaign
 
-Fields: title, honoree name in Hebrew (for example נפתלי בן יעקב), optional honoree name in English, dedication type (ilui nishmas, refuah shleima, zechus, other), optional free-text message (up to 1000 characters, shown on the chart page and the printed sign), end date, timezone.
+Fields: title, the honoree's name in Hebrew or English as the organizer types it (for example נפתלי בן יעקב), dedication type (ilui nishmas, refuah shleima, zechus, other), optional free-text message (up to 1000 characters, shown on the chart page and the printed sign), end date. The form offers an on-screen Hebrew keyboard for the name, since most people have none. The timezone is not asked for: a new campaign takes the organizer's browser timezone, which sets the hour reminders go out and whether the Israeli Yom Tov calendar applies.
 
 The end date picker shows the matching Hebrew date, since these campaigns usually target a shloshim or yahrzeit.
 

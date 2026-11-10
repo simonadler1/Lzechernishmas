@@ -38,11 +38,9 @@ test('the whole product: from a new organizer to the siyum', async ({ page, brow
   await press(page.getByRole('button', { name: 'Log in' }), testInfo);
 
   await press(page.getByRole('link', { name: 'Start a campaign' }), testInfo);
-  await page.getByLabel('Name in Hebrew').fill('חיה בת דוד');
-  await page.getByLabel('Name in English (optional)').fill('Chaya bas Dovid');
+  await page.getByLabel('Name', { exact: true }).fill('חיה בת דוד');
   await page.getByLabel('Campaign title').fill('Mishnayos for Bubby');
   await page.getByLabel('Target date').fill(endDate);
-  await page.getByLabel('Timezone').selectOption('America/New_York');
   await press(page.getByRole('button', { name: 'Create campaign' }), testInfo);
   await press(page.getByRole('button', { name: 'Activate campaign' }), testInfo);
   await expect(page.getByText('The chart is open.')).toBeVisible();

@@ -16,8 +16,9 @@ export interface CampaignDto {
   id: string;
   slug: string;
   title: string;
-  honoreeNameHe: string;
-  honoreeNameEn: string | null;
+  /** The person the learning is for, as typed: Hebrew or English. */
+  /** The person the learning is for, as typed: Hebrew or English. */
+  honoreeName: string;
   dedicationType: DedicationType;
   message: string | null;
   endDate: string;
@@ -32,8 +33,9 @@ export interface CampaignDto {
 /** What anyone with the link may know about a campaign. No title, no contact details. */
 export interface PublicCampaignDto {
   slug: string;
-  honoreeNameHe: string;
-  honoreeNameEn: string | null;
+  /** The person the learning is for, as typed: Hebrew or English. */
+  /** The person the learning is for, as typed: Hebrew or English. */
+  honoreeName: string;
   dedicationType: DedicationType;
   message: string | null;
   endDate: string;

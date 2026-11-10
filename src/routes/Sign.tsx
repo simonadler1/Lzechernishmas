@@ -4,7 +4,7 @@ import { formatLongDate } from '../../shared/dates';
 import { dedicationPhrase } from '../../shared/dedication';
 import { hebrewDate } from '../../shared/hebrew-date';
 import { Page } from '../components/layout';
-import { Button, Notice, PageHeading, Skeleton } from '../components/ui';
+import { Button, Notice, PageHeading, Skeleton, hasHebrew } from '../components/ui';
 import { ApiError, errorMessage } from '../lib/api';
 import { publicLink, useCampaign } from '../lib/campaigns';
 import { cx } from '../lib/cx';
@@ -76,7 +76,7 @@ export default function Sign() {
   const [paper, setPaper] = useState<Paper>('letter');
   const topRef = useRef<HTMLDivElement>(null);
   const messageRef = useRef<HTMLParagraphElement>(null);
-  const messageCut = useFittedMessage(topRef, messageRef, [paper, campaign?.message, campaign?.honoreeNameHe]);
+  const messageCut = useFittedMessage(topRef, messageRef, [paper, campaign?.message, campaign?.honoreeName]);
 
   if (isPending) {
     return (
@@ -100,7 +100,6 @@ export default function Sign() {
   const link = publicLink(campaign.slug);
   const shown = link.replace(/^https?:\/\//, '');
   const size = PAPER[paper];
-  const honoree = campaign.honoreeNameEn ?? campaign.honoreeNameHe;
 
   return (
     <Page className="print:m-0 print:max-w-none print:p-0">
@@ -180,17 +179,14 @@ export default function Sign() {
             All of Shas Mishnayos is being learned {dedicationPhrase(campaign.dedicationType, '').trim()}
           </p>
           <h2
-            dir="rtl"
-            lang="he"
+            dir="auto"
+            lang={hasHebrew(campaign.honoreeName) ? 'he' : undefined}
             className="font-hebrew font-bold"
             style={{ fontSize: campaign.message ? '11cqw' : '13cqw', lineHeight: 1.1, marginTop: '1.5cqw', textWrap: 'balance' }}
-            data-long={campaign.honoreeNameHe.length > 28 || undefined}
+            data-long={campaign.honoreeName.length > 28 || undefined}
           >
-            {campaign.honoreeNameHe}
+            {campaign.honoreeName}
           </h2>
-          {campaign.honoreeNameEn && (
-            <p style={{ fontSize: '3.4cqw', marginTop: '1cqw' }}>{campaign.honoreeNameEn}</p>
-          )}
           <p style={{ fontSize: '3cqw', marginTop: '1.5cqw' }}>
             Please finish by {formatLongDate(campaign.endDate)},{' '}
             <span dir="rtl" lang="he" className="font-hebrew" style={{ fontSize: '3.4cqw', whiteSpace: 'nowrap' }}>
@@ -227,7 +223,7 @@ export default function Sign() {
         </div>
 
         <p className="shrink-0" style={{ fontSize: '2.3cqw', padding: '0 5cqw 3cqw', textWrap: 'balance' }}>
-          This is the one shared chart for {honoree === campaign.honoreeNameHe ? 'this campaign' : `the mishnayos for ${honoree}`}.
+          This is the one shared chart for this campaign.
           It is the same in every shul, so you can see which masechtos are still open and whether all of Shas was
           finished.
         </p>

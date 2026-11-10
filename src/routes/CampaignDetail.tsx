@@ -9,7 +9,7 @@ import { ContactsSection } from '../components/ContactsSection';
 import { AssignMasechtos, ClaimsTable, OpenMasechtos } from '../components/ClaimsSection';
 import { Page } from '../components/layout';
 import { ProgressBar } from '../components/ProgressBar';
-import { Button, ButtonLink, CopyButton, Hebrew, Notice, Skeleton } from '../components/ui';
+import { Button, ButtonLink, CopyButton, Hebrew, HonoreeName, Notice, Skeleton } from '../components/ui';
 import { ApiError, errorMessage } from '../lib/api';
 import { STATUS_LABELS, publicLink, useCampaign, useCampaignAction, useUpdateCampaign } from '../lib/campaigns';
 
@@ -74,7 +74,6 @@ function Details({ campaign }: { campaign: CampaignDto }) {
 
   const rows: [string, ReactNode][] = [
     ['Title', campaign.title],
-    ['Name in English', campaign.honoreeNameEn ?? 'Not given'],
     ['The learning is', DEDICATION_LABELS[campaign.dedicationType]],
     [
       'Target date',
@@ -82,7 +81,6 @@ function Details({ campaign }: { campaign: CampaignDto }) {
         {formatLongDate(campaign.endDate)}, <Hebrew>{hebrewDate(campaign.endDate)}</Hebrew>
       </>,
     ],
-    ['Timezone', campaign.timezone.replace(/_/g, ' ')],
     ['Information for participants', campaign.message ? <span dir="auto">{campaign.message}</span> : 'None'],
   ];
 
@@ -192,7 +190,7 @@ export default function CampaignDetail() {
       </p>
       <div className="mt-4 flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
         <h1 className="min-w-0">
-          <Hebrew className="block text-2xl font-bold">{campaign.honoreeNameHe}</Hebrew>
+          <HonoreeName name={campaign.honoreeName} className="block text-2xl font-bold" />
         </h1>
         <p className="text-ink-muted">{STATUS_LABELS[campaign.status]}</p>
       </div>

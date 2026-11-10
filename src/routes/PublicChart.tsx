@@ -9,7 +9,7 @@ import { ParticipantFields, emptyParticipant, type ParticipantValues } from '../
 import { progressText } from '../components/ProgressBar';
 import { ShasMap } from '../components/ShasMap';
 import { StateMark } from '../components/StateMark';
-import { Button, ButtonLink, Checkbox, CopyButton, Field, Hebrew, Notice, Skeleton } from '../components/ui';
+import { Button, ButtonLink, Checkbox, CopyButton, Field, Hebrew, Notice, Skeleton, hasHebrew } from '../components/ui';
 import { ApiError, api, errorMessage, fieldErrors } from '../lib/api';
 import {
   entriesById,
@@ -28,29 +28,24 @@ function list(names: string[]): string {
 
 const names = (ids: string[]) => ids.map((id) => getMasechta(id)?.en ?? id);
 
-/** "l'ilui nishmas Naftali ben Yaakov", falling back to the Hebrew name. */
+/** "l'ilui nishmas Naftali ben Yaakov", for use inside a sentence. The name may be in either script. */
 export function Dedication({ campaign }: { campaign: PublicCampaignDto }) {
-  if (campaign.honoreeNameEn) return <>{dedicationPhrase(campaign.dedicationType, campaign.honoreeNameEn)}</>;
-  const [before] = dedicationPhrase(campaign.dedicationType, '\u0000').split('\u0000');
   return (
     <>
-      {before}
-      <Hebrew>{campaign.honoreeNameHe}</Hebrew>
+      {dedicationPhrase(campaign.dedicationType, '').trim()} <bdi>{campaign.honoreeName}</bdi>
     </>
   );
 }
 
-/** The title page: the name, what the learning is for, and the target date. */
+/** The title page: what the learning is for, the name, and the target date. */
 export function TitleBlock({ campaign, children }: { campaign: PublicCampaignDto; children?: ReactNode }) {
   return (
     <header className="text-center">
-      <h1 className="honoree-name" dir="rtl" lang="he">
-        {campaign.honoreeNameHe}
+      <p className="text-lg">All of Shas Mishnayos, learned {dedicationPhrase(campaign.dedicationType, '').trim()}</p>
+      <h1 className="honoree-name mt-2" dir="auto" lang={hasHebrew(campaign.honoreeName) ? 'he' : undefined}>
+        {campaign.honoreeName}
       </h1>
-      <p className="mt-3 text-lg">
-        All of Shas Mishnayos, learned <Dedication campaign={campaign} />
-      </p>
-      <p className="mt-2 text-ink-muted">
+      <p className="mt-3 text-ink-muted">
         Target date {formatLongDate(campaign.endDate)}
         {campaign.endDateHebrew && (
           <>
@@ -296,7 +291,7 @@ export default function PublicChart() {
   // A masechta someone else took in the meantime silently leaves the selection.
   const selected = useMemo(() => picked.filter((id) => !entries.has(id)), [picked, entries]);
 
-  const honoree = data?.campaign.honoreeNameEn ?? data?.campaign.honoreeNameHe;
+  const honoree = data?.campaign.honoreeName;
   useEffect(() => {
     if (honoree) document.title = `Mishnayos for ${honoree}`;
   }, [honoree]);

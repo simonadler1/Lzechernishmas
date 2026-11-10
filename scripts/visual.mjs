@@ -10,7 +10,8 @@ if (process.platform !== 'darwin') {
 const update = process.argv.includes('--update');
 const result = spawnSync(
   'pnpm',
-  ['exec', 'playwright', 'test', 'e2e/pages.spec.ts', ...(update ? ['--update-snapshots'] : [])],
+  ['exec', 'playwright', 'test', 'e2e/pages.spec.ts', // 'all' rewrites every baseline, including ones still inside the tolerance.
+  ...(update ? ['--update-snapshots=all'] : [])],
   { stdio: 'inherit', env: { ...process.env, VISUAL: '1' } },
 );
 process.exit(result.status ?? 1);

@@ -53,7 +53,7 @@ describe('public chart', () => {
     const body = await chart(campaign);
     expect(body.campaign).toMatchObject({
       slug: campaign.slug,
-      honoreeNameHe: 'נפתלי בן יעקב',
+      honoreeName: 'נפתלי בן יעקב',
       message: 'Please finish.',
       status: 'active',
       endDateHebrew: expect.any(String),

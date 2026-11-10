@@ -29,7 +29,7 @@ describe('POST /api/dev/seed', () => {
 });
 
 describe('seed scenarios', () => {
-  it.each(['empty', 'organizer', 'partly-taken', 'shared-phone', 'completed', 'long-names', 'past-date'])('loads %s', async (scenario) => {
+  it.each(['empty', 'organizer', 'partly-taken', 'shared-phone', 'english-name', 'completed', 'long-names', 'past-date'])('loads %s', async (scenario) => {
     expect((await seedAs('development', scenario)).status).toBe(200);
   });
 

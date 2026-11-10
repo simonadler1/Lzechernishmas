@@ -10,8 +10,7 @@ const today = (timezone = 'America/New_York') => localDate(new Date(), timezone)
 
 const input = (overrides: Record<string, unknown> = {}) => ({
   title: 'Mishnayos for Zeidy',
-  honoreeNameHe: 'נפתלי בן יעקב',
-  honoreeNameEn: 'Naftali ben Yaakov',
+  honoreeName: 'נפתלי בן יעקב',
   dedicationType: 'ilui_nishmas',
   message: 'Please finish by the shloshim.',
   endDate: addDays(today(), 30),
@@ -31,12 +30,31 @@ describe('campaign API', () => {
     const campaign = await create(client);
     expect(campaign).toMatchObject({
       title: 'Mishnayos for Zeidy',
-      honoreeNameHe: 'נפתלי בן יעקב',
+      honoreeName: 'נפתלי בן יעקב',
       status: 'draft',
       activatedOn: null,
       progress: { finished: 0, taken: 0, open: 63, total: 63 },
     });
     expect(campaign.slug).toMatch(/^[abcdefghjkmnpqrstuvwxyz23456789]{8}$/);
+  });
+
+  it('takes the name in Hebrew or in English', async () => {
+    const client = await loginAs('a@example.com');
+    expect((await create(client, { honoreeName: '  Naftali ben Yaakov ' })).honoreeName).toBe('Naftali ben Yaakov');
+    expect((await create(client, { honoreeName: 'נפתלי בן יעקב ע״ה' })).honoreeName).toBe('נפתלי בן יעקב ע״ה');
+  });
+
+  it('needs no timezone: it uses the one the page sends, or New York when none is sent', async () => {
+    const client = await loginAs('a@example.com');
+    const res = await client.post('/api/campaigns', input({ timezone: undefined }));
+    expect(res.status).toBe(201);
+    expect((await res.json<{ campaign: CampaignDto }>()).campaign.timezone).toBe('America/New_York');
+    expect((await create(client, { timezone: 'Asia/Jerusalem', endDate: addDays(today('Asia/Jerusalem'), 30) })).timezone).toBe('Asia/Jerusalem');
+
+    // Editing without a timezone leaves it alone.
+    const campaign = await create(client, { timezone: 'Europe/London' });
+    const patched = await client.patch(`/api/campaigns/${campaign.id}`, { title: 'Renamed' });
+    expect((await patched.json<{ campaign: CampaignDto }>()).campaign.timezone).toBe('Europe/London');
   });
 
   it('reads, lists and updates', async () => {
@@ -49,12 +67,11 @@ describe('campaign API', () => {
     const list = await client.get('/api/campaigns');
     expect((await list.json<{ campaigns: CampaignDto[] }>()).campaigns.map((c) => c.id)).toEqual([campaign.id]);
 
-    const patch = await client.patch(`/api/campaigns/${campaign.id}`, { title: 'New title', honoreeNameEn: '' });
+    const patch = await client.patch(`/api/campaigns/${campaign.id}`, { title: 'New title' });
     expect(patch.status).toBe(200);
     expect((await patch.json<{ campaign: CampaignDto }>()).campaign).toMatchObject({
       title: 'New title',
-      honoreeNameEn: null,
-      honoreeNameHe: 'נפתלי בן יעקב',
+      honoreeName: 'נפתלי בן יעקב',
       message: 'Please finish by the shloshim.',
     });
   });
@@ -105,8 +122,8 @@ describe('campaign API', () => {
     ['a past date', { endDate: '2020-01-01' }, 'endDate'],
     ['an unknown timezone', { timezone: 'Mars/Olympus' }, 'timezone'],
     ['an empty timezone', { timezone: '' }, 'timezone'],
-    ['a missing Hebrew name', { honoreeNameHe: '  ' }, 'honoreeNameHe'],
-    ['a Hebrew name in English letters', { honoreeNameHe: 'Naftali' }, 'honoreeNameHe'],
+    ['a missing name', { honoreeName: '  ' }, 'honoreeName'],
+    ['a name over 120 characters', { honoreeName: 'א'.repeat(121) }, 'honoreeName'],
     ['an unknown dedication', { dedicationType: 'birthday' }, 'dedicationType'],
     ['a missing title', { title: '' }, 'title'],
   ])('rejects %s', async (_name, overrides, field) => {

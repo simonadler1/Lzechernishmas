@@ -202,14 +202,13 @@ describe('phone and email', () => {
 
 describe('templates', () => {
   const campaign = {
-    honoreeNameHe: 'נפתלי בן יעקב',
-    honoreeNameEn: 'Naftali ben Yaakov',
+    honoreeName: 'Naftali ben Yaakov',
     dedicationType: 'ilui_nishmas',
   } as const;
   const hebrew = /[֐-׿]/;
   const links = { portionUrl: 'https://x.test/m/t', unsubscribeUrl: 'https://x.test/unsubscribe/u' };
 
-  it('ends SMS with the STOP line and keeps Hebrew out when an English name exists', () => {
+  it('ends SMS with the STOP line, and adds no Hebrew of its own to an English name', () => {
     const texts = [
       templates.claimConfirmation('sms', { campaign, masechtos: ['Peah', 'Demai'], ...links }),
       templates.invitation('sms', { campaign, organizerName: null, publicUrl: 'https://x.test/c/s', ...links }),
@@ -229,13 +228,17 @@ describe('templates', () => {
     }
   });
 
-  it('falls back to the Hebrew name in SMS when there is no English one', () => {
-    const text = templates.claimConfirmation('sms', {
-      campaign: { ...campaign, honoreeNameEn: null },
-      masechtos: ['Peah'],
-      ...links,
-    });
-    expect(text.body).toContain('נפתלי בן יעקב');
+  it('uses the name as the organizer typed it, in Hebrew or English', () => {
+    for (const channel of ['sms', 'email'] as const) {
+      const hebrewName = templates.claimConfirmation(channel, {
+        campaign: { ...campaign, honoreeName: 'נפתלי בן יעקב' },
+        masechtos: ['Peah'],
+        ...links,
+      });
+      expect(hebrewName.body).toContain("l'ilui nishmas נפתלי בן יעקב");
+      const englishName = templates.claimConfirmation(channel, { campaign, masechtos: ['Peah'], ...links });
+      expect(englishName.body).toContain("l'ilui nishmas Naftali ben Yaakov");
+    }
   });
 
   it('puts the unsubscribe link in emails', () => {

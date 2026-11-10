@@ -31,8 +31,7 @@ export interface CampaignRow {
   owner_user_id: string;
   slug: string;
   title: string;
-  honoree_name_he: string;
-  honoree_name_en: string | null;
+  honoree_name: string;
   dedication_type: 'ilui_nishmas' | 'refuah_shleima' | 'zechus' | 'other';
   message: string | null;
   end_date: string;
@@ -52,8 +51,7 @@ export async function createCampaign(overrides: Partial<CampaignRow> = {}): Prom
     owner_user_id: owner,
     slug: id.slice(0, 8),
     title: 'Mishnayos for Naftali',
-    honoree_name_he: 'נפתלי בן יעקב',
-    honoree_name_en: 'Naftali ben Yaakov',
+    honoree_name: 'נפתלי בן יעקב',
     dedication_type: 'ilui_nishmas',
     message: null,
     end_date: '2030-01-31',
@@ -66,12 +64,12 @@ export async function createCampaign(overrides: Partial<CampaignRow> = {}): Prom
     ...overrides,
   };
   await env.DB.prepare(
-    `INSERT INTO campaigns (id, owner_user_id, slug, title, honoree_name_he, honoree_name_en, dedication_type,
+    `INSERT INTO campaigns (id, owner_user_id, slug, title, honoree_name, dedication_type,
        message, end_date, timezone, status, activated_on, completed_at, created_at, updated_at)
-     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
   )
     .bind(
-      row.id, row.owner_user_id, row.slug, row.title, row.honoree_name_he, row.honoree_name_en,
+      row.id, row.owner_user_id, row.slug, row.title, row.honoree_name,
       row.dedication_type, row.message, row.end_date, row.timezone, row.status, row.activated_on,
       row.completed_at, row.created_at, row.updated_at,
     )

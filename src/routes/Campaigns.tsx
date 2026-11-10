@@ -2,7 +2,7 @@ import { Link } from 'react-router';
 import { formatLongDate } from '../../shared/dates';
 import { Page } from '../components/layout';
 import { ProgressBar } from '../components/ProgressBar';
-import { ButtonLink, Hebrew, Notice, PageHeading, Skeleton } from '../components/ui';
+import { ButtonLink, HonoreeName, Notice, PageHeading, Skeleton } from '../components/ui';
 import { errorMessage } from '../lib/api';
 import { STATUS_LABELS, useCampaigns } from '../lib/campaigns';
 
@@ -46,7 +46,7 @@ export default function Campaigns() {
                   className="block h-full rounded-control border border-line bg-surface p-4 hover:border-ink"
                 >
                   <div className="flex items-start justify-between gap-3">
-                    <Hebrew className="block min-w-0 text-xl font-bold">{campaign.honoreeNameHe}</Hebrew>
+                    <HonoreeName name={campaign.honoreeName} className="block min-w-0 text-xl font-bold" />
                     <span className="shrink-0 text-sm text-ink-muted">{STATUS_LABELS[campaign.status]}</span>
                   </div>
                   <p className="mt-1 font-semibold">{campaign.title}</p>

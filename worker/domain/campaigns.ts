@@ -10,8 +10,7 @@ export interface Campaign {
   owner_user_id: string;
   slug: string;
   title: string;
-  honoree_name_he: string;
-  honoree_name_en: string | null;
+  honoree_name: string;
   dedication_type: DedicationType;
   message: string | null;
   end_date: string;
@@ -25,8 +24,7 @@ export interface Campaign {
 
 export function campaignText(campaign: Campaign) {
   return {
-    honoreeNameHe: campaign.honoree_name_he,
-    honoreeNameEn: campaign.honoree_name_en,
+    honoreeName: campaign.honoree_name,
     dedicationType: campaign.dedication_type,
   };
 }
@@ -79,8 +77,7 @@ export function toCampaignDto(campaign: Campaign, progress: Progress): CampaignD
     id: campaign.id,
     slug: campaign.slug,
     title: campaign.title,
-    honoreeNameHe: campaign.honoree_name_he,
-    honoreeNameEn: campaign.honoree_name_en,
+    honoreeName: campaign.honoree_name,
     dedicationType: campaign.dedication_type,
     message: campaign.message,
     endDate: campaign.end_date,

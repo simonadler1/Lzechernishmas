@@ -32,7 +32,7 @@ Routes stay thin: parse with zod, call `domain/`, return JSON. Business rules li
 
 ## Schema
 
-Task 03 implements this. IDs are `crypto.randomUUID()` text. Timestamps are ISO-8601 UTC text. Calendar dates are `YYYY-MM-DD` text.
+Task 03 implements this, and later migrations are noted inline. IDs are `crypto.randomUUID()` text. Timestamps are ISO-8601 UTC text. Calendar dates are `YYYY-MM-DD` text.
 
 ```sql
 CREATE TABLE users (
@@ -54,7 +54,7 @@ CREATE TABLE sessions (
 CREATE TABLE campaigns (
   id TEXT PRIMARY KEY, owner_user_id TEXT NOT NULL REFERENCES users(id),
   slug TEXT NOT NULL UNIQUE, title TEXT NOT NULL,
-  honoree_name_he TEXT NOT NULL, honoree_name_en TEXT,
+  honoree_name TEXT NOT NULL,  -- Hebrew or English, as typed. Migration 0002 replaced honoree_name_he and honoree_name_en.
   dedication_type TEXT NOT NULL CHECK (dedication_type IN ('ilui_nishmas','refuah_shleima','zechus','other')),
   message TEXT, end_date TEXT NOT NULL, timezone TEXT NOT NULL,
   status TEXT NOT NULL DEFAULT 'draft' CHECK (status IN ('draft','active','completed','archived')),

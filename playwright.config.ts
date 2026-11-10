@@ -16,7 +16,9 @@ export default defineConfig({
   timeout: 60_000,
   snapshotPathTemplate: 'e2e/snapshots/{projectName}/{arg}{ext}',
   expect: {
-    toHaveScreenshot: { maxDiffPixelRatio: 0.01, animations: 'disabled' },
+    // A fixed number of pixels, not a share of the page. Pages here are thousands of pixels
+    // tall, and a 1% allowance once let a changed header pass unnoticed.
+    toHaveScreenshot: { maxDiffPixels: 150, animations: 'disabled' },
   },
   use: {
     baseURL: `http://localhost:${PORT}`,

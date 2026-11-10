@@ -13,6 +13,8 @@ campaignRoutes.use('*', requireUser);
 campaignRoutes.use('/:id', requireCampaignOwner);
 campaignRoutes.use('/:id/*', requireCampaignOwner);
 
+const DEFAULT_TIMEZONE = 'America/New_York';
+
 const endDateError = (message: string) => new AppError(400, 'validation', message, { fields: { endDate: message } });
 
 function requireFutureDate(endDate: string, timezone: string, now = new Date()) {
@@ -45,20 +47,22 @@ campaignRoutes.get('/', async (c) => {
 
 campaignRoutes.post('/', async (c) => {
   const input = await parseBody(c, campaignCreateSchema);
-  requireFutureDate(input.endDate, input.timezone);
+  // Reminders go out in the morning by this clock, and it decides which Yom Tov calendar applies.
+  const timezone = input.timezone ?? DEFAULT_TIMEZONE;
+  requireFutureDate(input.endDate, timezone);
 
   const id = crypto.randomUUID();
   const now = new Date().toISOString();
   for (let attempt = 0; ; attempt++) {
     try {
       await c.env.DB.prepare(
-        `INSERT INTO campaigns (id, owner_user_id, slug, title, honoree_name_he, honoree_name_en, dedication_type,
+        `INSERT INTO campaigns (id, owner_user_id, slug, title, honoree_name, dedication_type,
            message, end_date, timezone, status, created_at, updated_at)
-         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'draft', ?, ?)`,
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'draft', ?, ?)`,
       )
         .bind(
-          id, c.get('userId'), generateSlug(), input.title, input.honoreeNameHe, input.honoreeNameEn,
-          input.dedicationType, input.message, input.endDate, input.timezone, now, now,
+          id, c.get('userId'), generateSlug(), input.title, input.honoreeName,
+          input.dedicationType, input.message, input.endDate, timezone, now, now,
         )
         .run();
       break;
@@ -85,13 +89,12 @@ campaignRoutes.patch('/:id', async (c) => {
   if (endDate !== campaign.end_date) requireFutureDate(endDate, timezone);
 
   await c.env.DB.prepare(
-    `UPDATE campaigns SET title = ?, honoree_name_he = ?, honoree_name_en = ?, dedication_type = ?, message = ?,
+    `UPDATE campaigns SET title = ?, honoree_name = ?, dedication_type = ?, message = ?,
        end_date = ?, timezone = ?, updated_at = ? WHERE id = ?`,
   )
     .bind(
       input.title ?? campaign.title,
-      input.honoreeNameHe ?? campaign.honoree_name_he,
-      input.honoreeNameEn === undefined ? campaign.honoree_name_en : input.honoreeNameEn,
+      input.honoreeName ?? campaign.honoree_name,
       input.dedicationType ?? campaign.dedication_type,
       input.message === undefined ? campaign.message : input.message,
       endDate,
