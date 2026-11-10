@@ -8,8 +8,8 @@ Status values: `todo`, `in progress`, `done`, `blocked`.
 | 02 | [Shas domain module](tasks/02-shas-domain.md) | 01 | done | Data is copied to `shared/shas.json`. Also exports `TOTAL_PERAKIM` (523) and `compareMasechtos`. |
 | 03 | [Database and test harness](tasks/03-database.md) | 01 | done | `worker/test-setup.ts` migrates before and calls `reset()` after every test, so no test sees another's rows. |
 | 04 | [Mock messaging and opt-outs](tasks/04-messaging.md) | 03 | done | `dispatch` returns `sent`, `failed`, `suppressed` or `duplicate`. Routes throw `AppError` (`worker/lib/http.ts`) and `app.onError` shapes the response. The Hono app lives in `worker/app.ts`. |
-| 05 | [Organizer auth API](tasks/05-auth-api.md) | 04 | in progress | |
-| 06 | [Web shell and login](tasks/06-web-shell-login.md) | 05 | todo | |
+| 05 | [Organizer auth API](tasks/05-auth-api.md) | 04 | done | Code logic for organizers and participants is shared in `worker/domain/codes.ts`; only the newest code for an address counts. Cookies drop `Secure` only on a plain-http development server. Route tests use `TestClient` in `worker/test-http.ts`, which keeps cookies and uses https. |
+| 06 | [Web shell and login](tasks/06-web-shell-login.md) | 05 | in progress | |
 | 06b | [Cross-device test suite](tasks/06b-cross-device-tests.md) | 06 | todo | |
 | 06c | [Cloudflare deployment and runbook](tasks/06c-deployment.md) | 06b | todo | |
 | 07 | [Campaign API](tasks/07-campaign-api.md) | 02, 05 | todo | |

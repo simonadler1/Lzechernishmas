@@ -1,5 +1,6 @@
 import { Hono } from 'hono';
 import { AppError, errorBody, type AppEnv } from './lib/http';
+import { authRoutes } from './routes/auth';
 import { devRoutes } from './routes/dev';
 import { unsubscribeRoutes } from './routes/unsubscribe';
 
@@ -7,6 +8,7 @@ export const app = new Hono<AppEnv>();
 
 app.get('/api/health', (c) => c.json({ ok: true }));
 
+app.route('/api/auth', authRoutes);
 app.route('/api/dev', devRoutes);
 app.route('/api/unsubscribe', unsubscribeRoutes);
 
