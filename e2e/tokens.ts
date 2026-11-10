@@ -12,3 +12,8 @@ export function signInToken(campaignId: string, channel: 'sms' | 'email', addres
   const subject = `${campaignId}:${channel}:${address}`;
   return `${Buffer.from(subject).toString('base64url')}.${sign(`portion:${subject}`)}`;
 }
+
+export function unsubscribeToken(channel: 'sms' | 'email', address: string) {
+  const subject = `${channel}:${address}`;
+  return `${Buffer.from(subject).toString('base64url')}.${sign(`unsub:${subject}`)}`;
+}

@@ -1,5 +1,5 @@
 import type { Page } from '@playwright/test';
-import { manageToken, signInToken } from './tokens';
+import { manageToken, signInToken, unsubscribeToken } from './tokens';
 
 /**
  * Every page of the app, in each state worth looking at. pages.spec.ts runs the
@@ -118,6 +118,36 @@ export const PAGES: PageEntry[] = [
       await page.getByTestId('claim-demai').getByRole('button', { name: 'Release' }).click();
       await page.getByRole('button', { name: 'Keep it' }).waitFor();
     },
+  },
+  {
+    name: 'campaign-contacts-paste',
+    path: '/campaigns/seed-active',
+    scenario: 'partly-taken',
+    login: true,
+    setup: async (page) => {
+      await page.getByRole('button', { name: 'Paste a list instead' }).click();
+      await page
+        .getByLabel('Paste contacts')
+        .fill('Yaakov Stein, 718-555-0171\nBad Line\nMoshe Katz, 718 555 0101\nLeah Marcus, leah@example.com');
+      await page.getByRole('button', { name: 'Add contacts' }).click();
+      await page.getByText('2 of 4 added.').waitFor();
+    },
+  },
+  { name: 'unsubscribe', path: `/unsubscribe/${unsubscribeToken('sms', '+17185550101')}`, scenario: 'partly-taken' },
+  {
+    name: 'unsubscribe-done',
+    path: `/unsubscribe/${unsubscribeToken('email', 'shira@example.com')}`,
+    scenario: 'partly-taken',
+    setup: async (page) => {
+      await page.getByRole('button', { name: 'Stop these emails' }).click();
+      await page.getByRole('heading', { name: 'Stopped' }).waitFor();
+    },
+  },
+  {
+    name: 'unsubscribe-invalid',
+    path: '/unsubscribe/not-a-real-token',
+    scenario: 'empty',
+    expectedErrors: [{ status: 404, path: '/api/unsubscribe/' }],
   },
   {
     name: 'campaign-missing',

@@ -111,3 +111,28 @@ export interface OrganizerClaim {
     source: 'public' | 'organizer';
   };
 }
+
+export interface ContactDto {
+  id: string;
+  name: string;
+  phone: string | null;
+  email: string | null;
+  invitedAt: string | null;
+  /** Someone with this phone or email holds a masechta in this campaign. */
+  hasTaken: boolean;
+}
+
+export interface ContactRowResult {
+  status: 'added' | 'duplicate' | 'invalid';
+  name: string;
+  reason?: string;
+}
+
+export interface InvitationsResult {
+  sent: number;
+  /** Opted out, so nothing was sent. */
+  suppressed: number;
+  /** Already invited earlier. */
+  alreadyInvited: number;
+  failed: number;
+}

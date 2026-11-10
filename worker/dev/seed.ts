@@ -96,6 +96,21 @@ function peopleStatements(env: Env, campaignId: string, people: SeedPerson[]): D
   return statements;
 }
 
+const CONTACTS: [name: string, phone: string | null, email: string | null, invited: boolean][] = [
+  ['Moshe Katz', '+17185550101', 'moshe@example.com', true],
+  ['Rabbi Yitzchok Berger', '+17185550111', null, true],
+  ['Shira Goldstein', null, 'shira@example.com', false],
+  ['Menachem Roth', '+17185550112', 'menachem@example.com', false],
+];
+
+function contactStatements(env: Env, campaignId: string): D1PreparedStatement[] {
+  return CONTACTS.map(([name, phone, email, invited], index) =>
+    env.DB.prepare(
+      'INSERT INTO contacts (id, campaign_id, name, phone, email, invited_at, created_at) VALUES (?, ?, ?, ?, ?, ?, ?)',
+    ).bind(`${campaignId}-contact${index + 1}`, campaignId, name, phone, email, invited ? AT : null, AT),
+  );
+}
+
 const organizer = (env: Env) =>
   env.DB.prepare('INSERT INTO users (id, email, name, created_at) VALUES (?, ?, ?, ?)').bind(
     SEED_ORGANIZER.id, SEED_ORGANIZER.email, null, AT,
@@ -156,6 +171,7 @@ export const SCENARIOS: Record<string, Seeder> = {
       organizer(env),
       ...campaignStatements(env, ACTIVE),
       ...peopleStatements(env, ACTIVE.id, PARTLY_TAKEN),
+      ...contactStatements(env, ACTIVE.id),
       ...campaignStatements(env, DRAFT),
     ]);
   },

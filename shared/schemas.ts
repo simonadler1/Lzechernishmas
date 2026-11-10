@@ -94,3 +94,23 @@ export const claimStatusSchema = z.object({ status: z.enum(['claimed', 'complete
 
 export type ParticipantDetailsInput = z.input<typeof participantDetailsSchema>;
 export type PublicClaimInput = z.input<typeof publicClaimSchema>;
+
+// Contacts and invitations
+
+export const contactsBatchSchema = z.object({
+  rows: z
+    .array(
+      z.object({
+        name: z.string().max(200).default(''),
+        phone: z.string().max(100).nullish(),
+        email: z.string().max(254).nullish(),
+      }),
+    )
+    .min(1, 'Add at least one contact.')
+    .max(500, 'Add up to 500 contacts at a time.'),
+});
+
+export const invitationsSchema = z.object({
+  contactIds: z.array(z.string()).min(1).max(1000).optional(),
+  confirmedExpectation: z.literal(true, 'Confirm that these people would expect to hear from you about this campaign.'),
+});

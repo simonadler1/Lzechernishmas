@@ -95,6 +95,17 @@ describe('dispatch', () => {
     expect(await dispatch(env, message(), sender)).toBe('failed');
     expect((await outbox())[0]).toMatchObject({ status: 'failed', error: 'provider down' });
   });
+
+  it('lets a failed message be tried again under the same dedupe key', async () => {
+    const down: MessageSender = {
+      send: async () => {
+        throw new Error('provider down');
+      },
+    };
+    expect(await dispatch(env, message({ dedupeKey: 'retry' }), down)).toBe('failed');
+    expect(await dispatch(env, message({ dedupeKey: 'retry' }), okSender())).toBe('sent');
+    expect(await dispatch(env, message({ dedupeKey: 'retry' }), okSender())).toBe('duplicate');
+  });
 });
 
 describe('chooseChannel', () => {

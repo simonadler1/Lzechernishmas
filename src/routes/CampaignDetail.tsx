@@ -5,6 +5,7 @@ import { formatLongDate } from '../../shared/dates';
 import { DEDICATION_LABELS } from '../../shared/dedication';
 import { hebrewDate } from '../../shared/hebrew-date';
 import { CampaignForm } from '../components/CampaignForm';
+import { ContactsSection } from '../components/ContactsSection';
 import { AssignMasechtos, ClaimsTable, OpenMasechtos } from '../components/ClaimsSection';
 import { Page } from '../components/layout';
 import { ProgressBar } from '../components/ProgressBar';
@@ -218,6 +219,11 @@ export default function CampaignDetail() {
             </>
           )}
         </>
+      )}
+      {(campaign.status === 'draft' || campaign.status === 'active') && (
+        <Section title="Contacts and invitations">
+          <ContactsSection campaign={campaign} />
+        </Section>
       )}
       <Section title="Details">
         <Details campaign={campaign} />

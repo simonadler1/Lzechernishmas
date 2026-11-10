@@ -14,6 +14,7 @@ const Outbox = lazy(() => import('./routes/Outbox'));
 const MyPortion = lazy(() => import('./routes/MyPortion'));
 const NotFound = lazy(() => import('./routes/NotFound'));
 const PublicChart = lazy(() => import('./routes/PublicChart'));
+const Unsubscribe = lazy(() => import('./routes/Unsubscribe'));
 const Placeholder = lazy(() => import('./routes/Placeholder'));
 
 const queryClient = new QueryClient({
@@ -47,7 +48,7 @@ export function App() {
 
             <Route path="/c/:slug" element={<PublicChart />} />
             <Route path="/m/:token" element={<MyPortion />} />
-            <Route path="/unsubscribe/:token" element={<Placeholder title="Unsubscribe" />} />
+            <Route path="/unsubscribe/:token" element={<Unsubscribe />} />
             <Route path="/dev/outbox" element={<Outbox />} />
             <Route path="*" element={<NotFound />} />
           </Routes>

@@ -72,7 +72,8 @@ export async function dispatch(
   } catch (error) {
     const reason = error instanceof Error ? error.message : String(error);
     console.error(`Message ${id} (${message.template}) failed: ${reason}`);
-    await env.DB.prepare(`UPDATE outbound_messages SET status = 'failed', error = ? WHERE id = ?`)
+    // Dropping the dedupe key lets a later attempt try again.
+    await env.DB.prepare(`UPDATE outbound_messages SET status = 'failed', error = ?, dedupe_key = NULL WHERE id = ?`)
       .bind(reason.slice(0, 500), id)
       .run();
     return 'failed';
