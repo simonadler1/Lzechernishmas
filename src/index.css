@@ -67,6 +67,15 @@
   }
 }
 
+@keyframes segment-fill {
+  from {
+    clip-path: inset(0 0 0 100%);
+  }
+  to {
+    clip-path: inset(0);
+  }
+}
+
 @layer components {
   /* The honoree's name: the largest thing on any page it appears on. */
   .honoree-name {
@@ -83,6 +92,11 @@
       var(--color-tekhelet) 0 2px,
       var(--color-surface) 2px 6px
     );
+  }
+
+  /* The one motion moment: a segment of the Shas map filling in when someone takes it. */
+  .segment-fill {
+    animation: segment-fill 700ms ease-out both;
   }
 
   /* A link sitting inside a sentence. */

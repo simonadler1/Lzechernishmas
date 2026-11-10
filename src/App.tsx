@@ -12,6 +12,7 @@ const CampaignDetail = lazy(() => import('./routes/CampaignDetail'));
 const Login = lazy(() => import('./routes/Login'));
 const Outbox = lazy(() => import('./routes/Outbox'));
 const NotFound = lazy(() => import('./routes/NotFound'));
+const PublicChart = lazy(() => import('./routes/PublicChart'));
 const Placeholder = lazy(() => import('./routes/Placeholder'));
 
 const queryClient = new QueryClient({
@@ -43,7 +44,7 @@ export function App() {
               <Route path="/campaigns/:id/sign" element={<Placeholder title="Printable sign" />} />
             </Route>
 
-            <Route path="/c/:slug" element={<Placeholder title="Mishnayos chart" />} />
+            <Route path="/c/:slug" element={<PublicChart />} />
             <Route path="/m/:token" element={<Placeholder title="My portion" />} />
             <Route path="/unsubscribe/:token" element={<Placeholder title="Unsubscribe" />} />
             <Route path="/dev/outbox" element={<Outbox />} />

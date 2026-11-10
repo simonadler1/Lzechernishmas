@@ -21,6 +21,16 @@ export interface PageEntry {
   setup?: (page: Page) => Promise<void>;
 }
 
+/** Takes a masechta through the API, so this browser's device cookie remembers it. */
+const takeAsVisitor = async (page: Page) => {
+  const res = await page.request.post('/api/public/campaigns/chart234/claims', {
+    data: { name: 'Returning Visitor', masechtaIds: ['chagigah', 'kiddushin'] },
+  });
+  if (!res.ok()) throw new Error(`Could not take a masechta: ${res.status()}`);
+};
+
+const CHART = '/c/chart234';
+
 export const PAGES: PageEntry[] = [
   { name: 'login', path: '/login', scenario: 'empty' },
   {
@@ -82,6 +92,71 @@ export const PAGES: PageEntry[] = [
     login: true,
     expectedErrors: [{ status: 404, path: '/api/campaigns/no-such-campaign' }],
   },
+
+  { name: 'chart-partly-taken', path: CHART, scenario: 'partly-taken' },
+  { name: 'chart-completed', path: CHART, scenario: 'completed' },
+  { name: 'chart-long-names', path: CHART, scenario: 'long-names' },
+  { name: 'chart-past-date', path: CHART, scenario: 'past-date' },
+  { name: 'chart-yours', path: CHART, scenario: 'partly-taken', before: takeAsVisitor },
+  {
+    name: 'chart-only-open',
+    path: CHART,
+    scenario: 'partly-taken',
+    setup: async (page) => {
+      await page.getByLabel("Show only what's still open").check();
+    },
+  },
+  {
+    name: 'chart-selected',
+    path: CHART,
+    scenario: 'partly-taken',
+    setup: async (page) => {
+      await page.getByRole('button', { name: /Kilayim/ }).click();
+      await page.getByRole('button', { name: /Sheviis/ }).click();
+      await page.getByText('2 selected').waitFor();
+    },
+  },
+  {
+    name: 'chart-form',
+    path: CHART,
+    scenario: 'partly-taken',
+    setup: async (page) => {
+      await page.getByRole('button', { name: /Kilayim/ }).click();
+      await page.getByRole('button', { name: 'Continue' }).click();
+      await page.getByLabel('Phone (optional)').fill('718-555-0142');
+    },
+  },
+  {
+    name: 'chart-taken-confirmation',
+    path: CHART,
+    scenario: 'partly-taken',
+    setup: async (page) => {
+      await page.getByRole('button', { name: /Kilayim/ }).click();
+      await page.getByRole('button', { name: 'Continue' }).click();
+      await page.getByLabel('Your name', { exact: true }).fill('Name Only');
+      await page.getByRole('button', { name: 'Take this masechta' }).click();
+      await page.getByRole('heading', { name: 'Taken' }).waitFor();
+    },
+  },
+  {
+    name: 'chart-sign-in',
+    path: CHART,
+    scenario: 'partly-taken',
+    setup: async (page) => {
+      await page.getByRole('button', { name: 'Already took a masechta? Sign in' }).click();
+      await page.getByLabel('Phone or email').fill('718-555-0101');
+      await page.getByRole('button', { name: 'Send code' }).click();
+      await page.getByLabel('6-digit code').waitFor();
+    },
+  },
+  {
+    name: 'chart-not-found',
+    path: '/c/nothing22',
+    scenario: 'empty',
+    expectedErrors: [
+      { status: 404, path: '/api/public/campaigns/nothing22' },
+    ],
+  },
 ];
 
 /** JavaScript downloaded to show a page, gzipped. Keeps the public entry path light. */
@@ -92,4 +167,8 @@ export interface Budget {
   maxGzipKb: number;
 }
 
-export const BUDGETS: Budget[] = [{ name: 'login', path: '/login', scenario: 'empty', maxGzipKb: 200 }];
+export const BUDGETS: Budget[] = [
+  { name: 'login', path: '/login', scenario: 'empty', maxGzipKb: 200 },
+  // The page people reach from the QR code, often on a slow connection in shul.
+  { name: 'public chart', path: CHART, scenario: 'partly-taken', maxGzipKb: 200 },
+];
